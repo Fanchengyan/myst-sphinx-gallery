@@ -13,7 +13,7 @@ from myst_sphinx_gallery.images import (
 @pytest.fixture
 def nb_file():
     cwd = Path(__file__).parent
-    nb_file = cwd.parent / "examples/code_markdown strategy/plot_image.ipynb"
+    nb_file = cwd.parent / "examples/code_markdown_strategy/plot_image.ipynb"
     return nb_file
 
 
