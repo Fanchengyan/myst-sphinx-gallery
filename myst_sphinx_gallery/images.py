@@ -16,6 +16,9 @@ from PIL import Image
 class DocImages:
     """A class to manage images in a MyST markdown/notebook/rst file."""
 
+    _urls: list = []
+    _alts: list = []
+
     def __init__(self, images: list[tuple[str, str]]) -> None:
         """Initialize the DocImages object.
 
@@ -55,7 +58,8 @@ class DocImages:
 
     def _parse_images(self):
         """Parse the images urls and alt text."""
-        self._urls, self._alts = zip(*self.images)
+        if len(self.images) > 0:
+            self._urls, self._alts = zip(*self.images)
 
     @property
     def images(self) -> list[tuple[str, str]]:

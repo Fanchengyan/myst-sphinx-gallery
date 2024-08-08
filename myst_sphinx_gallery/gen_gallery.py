@@ -25,10 +25,14 @@ def main(app: Sphinx):
     gallery_conf = app.config.myst_sphinx_gallery_options
 
     src_dir = Path(app.builder.srcdir)
+
     gallery_dir = (src_dir / gallery_conf["gallery_dirs"]).resolve()
     examples_dir = (src_dir / gallery_conf["examples_dirs"]).resolve()
+    auto_examples_path = gallery_dir
 
-    generate_gallery(examples_dir, gallery_dir)
+    # app.config.html_static_path.append(str(auto_examples_path))
+
+    # generate_gallery(examples_dir, gallery_dir)
 
 
 def setup(app: Sphinx):

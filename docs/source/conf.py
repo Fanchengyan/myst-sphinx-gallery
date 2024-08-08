@@ -26,7 +26,6 @@ extensions = [
     "myst_nb",
     # "myst_sphinx_gallery.gen_gallery",
 ]
-from myst_sphinx_gallery import generate_gallery
 
 myst_sphinx_gallery_options = {
     "thumbnail_strategy": "last",
@@ -39,6 +38,8 @@ gallery_options = {
     "examples_dirs": "../../examples",
     "gallery_dirs": "auto_examples",
 }
+
+from myst_sphinx_gallery import generate_gallery
 
 generate_gallery(**gallery_options)
 

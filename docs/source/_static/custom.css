@@ -5,11 +5,3 @@
 html {
     --pst-font-size-base: 17px;
 }
-.footer-item:not(:last-child) {
-  border-right: 1px solid var(--pst-color-text-base);
-  margin-right: 0.5em;
-  padding-right: 0.5em;
-}
-.footer-item {
-  display: inline-block;
-}

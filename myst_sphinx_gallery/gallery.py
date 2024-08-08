@@ -2,6 +2,7 @@
 A module for managing the gallery of examples.
 """
 
+import shutil
 import warnings
 from pathlib import Path
 from typing import Literal
@@ -275,7 +276,8 @@ class ExampleConverter:
     """
 
     _file_type: Literal["notebook", "markdown", "rst"]
-    _gallery_thumb: Path
+    _gallery_thumb: Path | None = None
+    _thumbnail: Path | None = None
 
     def __init__(
         self,
@@ -308,23 +310,18 @@ class ExampleConverter:
         self.gallery_dir = Path(gallery_dir)
         ensure_dir_exists(self.gallery_dir)
 
-        (
-            self._index_file,
-            self._thumbnail_dir,
-            self._default_thumb,
-            self._relative_path,
-        ) = self._parse_paths(default_thumb)
-        self._parse_example_type()
+        self._index_file, self._relative_path = self._parse_paths()
+        self._file_type = self._parse_example_type()
+        self._default_thumb = self._ensure_default_thumb(default_thumb)
 
-    def _parse_paths(self, default_thumb: Path | str = None):
-        """Parse the paths for the example file."""
-        # thumb
-        thumb_dir = self.gallery_dir / "thumbs"
+    def _ensure_default_thumb(self, default_thumb: Path | str) -> Path:
+        """Ensure the default thumbnail image exists."""
         if default_thumb is None:
-            default_thumb = thumb_dir / "no_image.png"
-        else:
-            default_thumb = Path(default_thumb)
+            default_thumb = default_thumbnail()
+        return Path(default_thumb)
 
+    def _parse_paths(self):
+        """Parse the paths for the example file."""
         # relative path
         relative_path = self.example_file.relative_to(self.examples_dir)
 
@@ -339,7 +336,7 @@ class ExampleConverter:
         folder, name = remove_num_prefix(_index_file)
 
         index_file = self.gallery_dir / folder / name
-        return index_file, thumb_dir, default_thumb, relative_path
+        return index_file, relative_path
 
     def _parse_example_type(self) -> Literal["notebook", "markdown", "rst"]:
         """Parse the example file type."""
@@ -353,7 +350,7 @@ class ExampleConverter:
             raise ValueError(
                 f"Unrecognized file type: {self.example_file.suffix} for {self.example_file}"
             )
-        self._file_type = file_type
+        return file_type
 
     @property
     def file_type(self) -> Literal["notebook", "markdown", "rst"]:
@@ -394,14 +391,24 @@ class ExampleConverter:
         return self._gallery_thumb
 
     @property
-    def thumb_dir(self) -> Path:
-        """path to the thumbs directory."""
-        return self._thumbnail_dir
-
-    @property
     def default_thumb(self) -> Path:
         """path to the default thumbnail image."""
         return self._default_thumb
+
+    @property
+    def thumb_file(self) -> Path:
+        """path to the thumbnail image for the example."""
+        folder = self.gallery_dir / "myst_sphinx_gallery_thumbs"
+        ensure_dir_exists(folder)
+        thumb_file = folder / f"{self.index_file.stem}_thumb.png"
+        return thumb_file
+
+    @property
+    def thumb_file_rel(self) -> str:
+        """relative path to the thumbnail image for the example."""
+        thumb_file_rel = self.thumb_file.relative_to(self.gallery_dir).as_posix()
+        thumb_file_rel = f"/{self.gallery_dir.stem}/{thumb_file_rel}"
+        return thumb_file_rel
 
     @property
     def thumb_idx(self) -> int:
@@ -420,6 +427,11 @@ class ExampleConverter:
         with open(self.example_file, "r", encoding="utf-8") as f:
             return f.read()
 
+    def _safe_copy_thumb(self):
+        """Copy the thumbnail image to the gallery."""
+        if not self.thumb_file.exists():
+            shutil.copy(self.default_thumb, self.thumb_file)
+
     def _parse_doc_thumb(self, images: DocImages):
         """Parse the thumb to be used in the gallery.
 
@@ -437,7 +449,8 @@ class ExampleConverter:
                 self._gallery_thumb = images[self.thumb_idx]
         else:
             exists = False
-            self._gallery_thumb = self.default_thumb
+            self._safe_copy_thumb()
+            self._gallery_thumb = self.thumb_file_rel
 
         return exists
 
@@ -451,12 +464,12 @@ class ExampleConverter:
         """
         exists = True
         if len(images) > 0:
-            thumb_file = self.index_file.parent / f"{self.example_file.stem}_thumb.png"
-            images.save_image(thumb_file, self.thumb_idx)
-            self._gallery_thumb = thumb_file
+            images.save_image(self.thumb_file, self.thumb_idx)
+            self._gallery_thumb = self.thumb_file_rel
         else:
             exists = False
-            self._gallery_thumb = self.default_thumb
+            self._safe_copy_thumb()
+            self._gallery_thumb = self.thumb_file_rel
         return exists
 
     def _parse_thumb(self):
@@ -587,3 +600,8 @@ def remove_num_prefix(header_file):
     if name.split("-")[0].isdigit():
         name = "-".join(name.split("-")[1:])
     return folder, name
+
+
+def default_thumbnail():
+    """Return the path to the default thumbnail image."""
+    return Path(__file__).parent / "_static" / "no_image.png"
