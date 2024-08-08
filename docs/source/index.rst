@@ -7,4 +7,4 @@ MyST Sphinx Gallery
    :caption: Contents:
 
    user_guide/index
-   auto_examples/alt_strategy/index
+   auto_examples/index

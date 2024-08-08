@@ -4,23 +4,23 @@ This is an example of images in a markdown to test ``gallery_thumbnail`` for mys
 
 Conventional markdown image syntax:
 
-![](../_static/bar_colors.png)
+![](/_static/bar_colors.png)
 
-![gallery_thumbnail](../_static/barchart.png)
+![gallery_thumbnail](/_static/barchart.png)
 
 Image example:
 
-```{image} ../_static/affine.png
+```{image} /_static/affine.png
    :align: center
-   :with: 60%
+   :width: 60%
    :alt: gallery_thumbnail
 ```
 
 Figure example:
 
-```{figure} ../_static/rgb.png
+```{figure} /_static/rgb.png
    :align: center
-   :with: 60%
+   :width: 60%
 
 This is the caption of the figure (a simple paragraph).
 ```

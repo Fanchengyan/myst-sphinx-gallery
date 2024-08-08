@@ -23,23 +23,29 @@ extensions = [
     "sphinx_copybutton",
     "sphinx_design",
     "sphinx_togglebutton",
-    # "myst_nb",
-    # "myst_parser",
-    "myst_sphinx_gallery.gen_gallery",
+    "myst_nb",
+    # "myst_sphinx_gallery.gen_gallery",
 ]
+from myst_sphinx_gallery import generate_gallery
 
 myst_sphinx_gallery_options = {
     "thumbnail_strategy": "last",
-    "thumbnail_strategy_notebook": "markdown",
-    "default_thumb_file": "_static/thumbnail.png",
+    "notebook_thumbnail_strategy": "markdown",
+    "default_thumbnail_file": "_static/thumbnail.png",
     "examples_dirs": "../../examples",  # path to your example scripts
     "gallery_dirs": "auto_examples",  # path to where to save gallery generated output
 }
+gallery_options = {
+    "examples_dirs": "../../examples",
+    "gallery_dirs": "auto_examples",
+}
+
+generate_gallery(**gallery_options)
 
 source_suffix = {
     ".rst": "restructuredtext",
-    ".md": "markdown",
-    ".txt": "markdown",
+    ".md": "myst-nb",
+    ".myst": "myst-nb",
 }
 myst_enable_extensions = ["colon_fence"]
 myst_url_schemes = ["http", "https", "mailto"]
@@ -56,13 +62,15 @@ exclude_patterns = []
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
-html_logo = "_static/logo/logo.png"
-
+html_logo = "_static/logo/logo.svg"
+html_favicon = "_static/logo/logo-square.svg"
 html_theme_options = {
     "show_toc_level": 2,
     "show_nav_level": 2,
     "header_links_before_dropdown": 10,
     "use_edit_page_button": True,
+    "pygments_light_style": "default",
+    "pygments_dark_style": "fruity",
     "icon_links": [
         {
             "name": "GitHub",

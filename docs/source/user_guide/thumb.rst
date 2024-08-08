@@ -9,7 +9,7 @@ If there are multiple figures in an example file, you can specify the strategy t
 
 1. **alt**: If the ``alt`` attribute of an image/figure is set to ``gallery_thumbnail``, that image/figure will be used as the gallery thumbnail for this file.
 2. **first/last**: If there are multiple images that can be used as the gallery thumbnail, the ``first/last`` image will be selected. You can specify the strategy by setting the ``thumbnail_strategy`` in the configuration file. The default value is ``first``.
-3. **code/markdown**: For Jupyter notebook files, both ``markdown`` and ``code`` cells can contain images. You can specify the strategy by setting the ``thumbnail_strategy_notebook`` in the configuration file. The default value is ``code``.
+3. **code/markdown**: For Jupyter notebook files, both ``markdown`` and ``code`` cells can contain images. You can specify the strategy by setting the ``notebook_thumbnail_strategy`` in the configuration file. The default value is ``code``.
 4. **default thumbnail**: If no image/figure is found, the default thumbnail will be used.
 
 
@@ -88,7 +88,7 @@ For example, if you want to use the last image as the gallery thumbnail, you can
 ``code/markdown`` strategy
 --------------------------
 
-For Jupyter notebook files, both ``markdown`` and ``code`` cells can contain images. You can specify the which cell type will be detected first as the gallery thumbnail by setting the ``thumbnail_strategy_notebook`` in the configuration file. The default value is ``code``.
+For Jupyter notebook files, both ``markdown`` and ``code`` cells can contain images. You can specify the which cell type will be detected first as the gallery thumbnail by setting the ``notebook_thumbnail_strategy`` in the configuration file. The default value is ``code``.
 
 For example, if you want to use the ``markdown`` cell as the gallery thumbnail, you can add the following configuration to the ``conf.py`` file:
 
@@ -96,13 +96,13 @@ For example, if you want to use the ``markdown`` cell as the gallery thumbnail, 
 
    myst_sphinx_gallery_options = {
       ...,
-      "thumbnail_strategy_notebook": "markdown",
+      "notebook_thumbnail_strategy": "markdown",
    }
 
 ``default`` thumbnail
 ---------------------
 
-If no image/figure is found, the default thumbnail will be used. You can specify the default thumbnail by setting the ``default_thumb_file`` in the configuration file. 
+If no image/figure is found, the default thumbnail will be used. You can specify the default thumbnail by setting the ``default_thumbnail_file`` in the configuration file. 
 
 .. note::
 
@@ -114,5 +114,5 @@ For example, if you want to use the ``_static/thumbnail.png``, which is your cus
 
    myst_sphinx_gallery_options = {
       ...,
-      "default_thumb_file": "_static/thumbnail.png",
+      "default_thumbnail_file": "_static/thumbnail.png",
    }
