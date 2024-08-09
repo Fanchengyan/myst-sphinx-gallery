@@ -1,8 +1,7 @@
-========================================
-Code and Markdown Strategy for Notebooks
-========================================
+====================================
+Code/Markdown Strategy for Notebooks
+====================================
 
-This section tests:
+This section tests selecting the thumbnail image from markdown or code cells in a Jupyter notebook.
 
-- the case where the example files do not have a number prefix in their name. 
-- Whether it works with the ``alt`` strategy where the ``alt`` is ``gallery_thumbnail`` for different file types : ``.rst``, ``.ipynb``, ``.md``.
+

@@ -1,3 +1,5 @@
+.. _thumbnail_strategy:
+
 ====================
 Thumbnail Strategies
 ====================
@@ -74,16 +76,18 @@ Since ``myst-nb`` supports both markdown and notebook files, the syntax for mark
 ``first/last`` strategy
 -----------------------
 
-There may be multiple images are candidates for the gallery thumbnail for an example file. If you want to use the ``first/last`` image as the gallery thumbnail, you can specify the strategy in the configuration file. The default value is ``first``.
+There may be multiple images are candidates for the gallery thumbnail for an example file. For example, if ``alt`` attribute is not set, there are multiple images can be used as the gallery thumbnail. If you want to use the ``first/last`` image as the gallery thumbnail, you can specify the strategy in the configuration file. The default value is ``first``.
 
-For example, if you want to use the last image as the gallery thumbnail, you can add the following configuration to the ``conf.py`` file:
+If you want to use the last image as the gallery thumbnail, you can add the following configuration to the ``conf.py`` file:
 
 .. code-block:: python
 
-   myst_sphinx_gallery_options = {
+   myst_sphinx_gallery_config = GalleryConfig(
       ...,
-      "thumbnail_strategy": "last",
-   }
+      thumbnail_strategy = "last",
+      )
+
+.. _code_markdown:
 
 ``code/markdown`` strategy
 --------------------------
@@ -94,25 +98,26 @@ For example, if you want to use the ``markdown`` cell as the gallery thumbnail, 
 
 .. code-block:: python
 
-   myst_sphinx_gallery_options = {
+   myst_sphinx_gallery_config = GalleryConfig(
       ...,
-      "notebook_thumbnail_strategy": "markdown",
-   }
+      notebook_thumbnail_strategy = "markdown",
+      )
 
-``default`` thumbnail
----------------------
+default thumbnail
+-----------------
 
 If no image/figure is found, the default thumbnail will be used. You can specify the default thumbnail by setting the ``default_thumbnail_file`` in the configuration file. 
 
 .. note::
 
-   The default value is ``auto_examples/thumbnail.png``, which is the default thumbnail provided by this extension (This figure is directly copied from the ``Sphinx Gallery`` extension).
+   The default value is None, which means a default thumbnail provided by this extension will be used (This figure is directly copied from the ``Sphinx Gallery`` extension).
 
 For example, if you want to use the ``_static/thumbnail.png``, which is your custom image, as the default thumbnail, you can add the following configuration to the ``conf.py`` file:
 
 .. code-block:: python
 
-   myst_sphinx_gallery_options = {
+   myst_sphinx_gallery_config = GalleryConfig(
       ...,
-      "default_thumbnail_file": "_static/thumbnail.png",
-   }
+      default_thumbnail_file = "_static/thumbnail.png",
+      )
+

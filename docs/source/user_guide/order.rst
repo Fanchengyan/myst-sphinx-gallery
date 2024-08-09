@@ -1,6 +1,8 @@
-=============================
-Controlling the Gallery Order
-=============================
+.. _example_order:
+
+==========================
+Controlling Examples Order
+==========================
 
 MyST Sphinx Gallery using files/directories order to determine the order of the gallery. To specify the order of the files/directories, you can add a number ``dd-`` prefix at the beginning of the file name. The number will be automatically removed from the file name in the output gallery.
 
@@ -36,10 +38,3 @@ will be displayed in the gallery as:
          ├── basic-example2
          └── basic-example1
 
-
-.. important::
-
-    - The ``GALLERY_HEADER.rst`` file is used to display the gallery title and description. 
-    - The whole sub-folder will be ignored if it does not have the ``GALLERY_HEADER.rst`` file in it.
-    - The ``GALLERY_HEADER.rst`` file will be converted to the ``index.html`` page for the gallery.
-    

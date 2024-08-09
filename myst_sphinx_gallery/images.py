@@ -169,14 +169,12 @@ def parse_md_images(markdown_content: str) -> DocImages:
 
     Two types of markdown image syntax are supported:
 
-    1. Conventional markdown image syntax: ![alt](img/xxx.png)
-    2. Myst markdown image/figure syntax:
-        - ```{image} img/xxx.png
-                :alt: xxxx
-          ```
-        - ```{figure} img/xxx.png
-                :alt: xxxx
-          ```
+    1. Conventional markdown image syntax: ``![alt](img/xxx.png)``
+    2. Myst markdown image/figure syntax: See `Images and figures <https://myst-parser.readthedocs.io/en/latest/syntax/images_and_figures.html>`_ for more details.
+
+    .. warning::
+
+        The html image syntax is not supported.
 
     Parameters
     ----------
@@ -229,9 +227,12 @@ def parse_rst_images(rst_content: str) -> DocImages:
 
     rst image/figure syntax are supported:
 
-        - .. image:: xxx.png
+    .. code-block:: rst
+
+        .. image:: xxx.png
                :alt: xxxx
-        - .. figure:: xxx.png
+
+        .. figure:: xxx.png
                :alt: xxxx
 
     Parameters

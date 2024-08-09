@@ -606,7 +606,7 @@ def to_section_title(title: str) -> str:
     return sec_title
 
 
-def remove_num_prefix(header_file):
+def remove_num_prefix(header_file: Path) -> tuple[str, str]:
     """Remove the number prefix from the example file/dir."""
     folder, name = header_file.parent.stem, header_file.name
     if folder.split("-")[0].isdigit():
