@@ -4,10 +4,7 @@ MyST Sphinx Gallery
 
 """
 
-from pathlib import Path
-
-from sphinx.application import Sphinx
-
+from .config import GalleryConfig
 from .gallery import generate_gallery
 
 # dev versions should have "dev" in them, stable should not.

@@ -9,7 +9,21 @@
 project = "MyST Sphinx Gallery"
 copyright = "2024, Fan Chengyan (Fancy)"
 author = "Fan Chengyan (Fancy)"
-release = "v0.1"
+
+# -- MyST Sphinx Gallery Configuration ---------------------------------------
+from pathlib import Path
+
+from myst_sphinx_gallery import GalleryConfig, __version__, generate_gallery
+
+myst_sphinx_gallery_config = GalleryConfig(
+    examples_dirs="../../examples",
+    gallery_dirs="auto_examples",
+    root_dir=Path(__file__).parent,
+    notebook_thumbnail_strategy="code",
+)
+generate_gallery(myst_sphinx_gallery_config)
+
+release = f"v{__version__}"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -26,22 +40,6 @@ extensions = [
     "myst_nb",
     # "myst_sphinx_gallery.gen_gallery",
 ]
-
-myst_sphinx_gallery_options = {
-    "thumbnail_strategy": "last",
-    "notebook_thumbnail_strategy": "markdown",
-    "default_thumbnail_file": "_static/thumbnail.png",
-    "examples_dirs": "../../examples",  # path to your example scripts
-    "gallery_dirs": "auto_examples",  # path to where to save gallery generated output
-}
-gallery_options = {
-    "examples_dirs": "../../examples",
-    "gallery_dirs": "auto_examples",
-}
-
-from myst_sphinx_gallery import generate_gallery
-
-generate_gallery(**gallery_options)
 
 source_suffix = {
     ".rst": "restructuredtext",

@@ -8,3 +8,4 @@ MyST Sphinx Gallery
 
    user_guide/index
    auto_examples/index
+   api/index

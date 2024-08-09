@@ -16,8 +16,9 @@ from PIL import Image
 class DocImages:
     """A class to manage images in a MyST markdown/notebook/rst file."""
 
-    _urls: list = []
-    _alts: list = []
+    _urls: list
+    _alts: list
+    _images: list[tuple[str, str]]
 
     def __init__(self, images: list[tuple[str, str]]) -> None:
         """Initialize the DocImages object.
@@ -26,7 +27,7 @@ class DocImages:
             A list of tuples, where each tuple contains the image url and alt text.
         """
         self._images = images
-        self._parse_images()
+        self._urls, self._alts = self._parse_images()
 
     def __len__(self) -> int:
         """Return the number of images."""
@@ -58,8 +59,10 @@ class DocImages:
 
     def _parse_images(self):
         """Parse the images urls and alt text."""
-        if len(self.images) > 0:
-            self._urls, self._alts = zip(*self.images)
+        if len(self.images) == 0:
+            return [], []
+        urls, alts = zip(*self.images)
+        return urls, alts
 
     @property
     def images(self) -> list[tuple[str, str]]:
@@ -191,21 +194,34 @@ def parse_md_images(markdown_content: str) -> DocImages:
     md_pattern = r"!\[(.*?)\]\((.*?)\)"
     for match in re.finditer(md_pattern, markdown_content):
         alt, url = match.groups()
-        images.append((url, alt))
+        images.append((strip_str(url), strip_str(alt)))
 
     # case 2 (myst markdown image/figure syntax):
     myst_pattern = r"```\{(image|figure)\}\s+(.*?)\n(.*?)```"
     for match in re.finditer(myst_pattern, markdown_content, re.DOTALL):
         directive, url, options = match.groups()
-        url = url.strip()
 
-        # 查找alt文本
+        # find alt text
         alt_match = re.search(r":alt:\s*(.*?)\n", options)
         alt = alt_match.group(1).strip() if alt_match else ""
 
-        images.append((url, alt))
+        images.append((strip_str(url), strip_str(alt)))
 
     return DocImages(images)
+
+
+def load_nb_markdown(nb_file: Path) -> str:
+    """Load the markdown content from a Jupyter notebook file."""
+
+    with open(nb_file, "r", encoding="utf-8") as f:
+        notebook = nbformat.read(f, as_version=4)
+
+    markdown_cells = []
+    for cell in notebook.cells:
+        if cell.cell_type == "markdown":
+            markdown_cells.append(cell.source)
+
+    return "\n".join(markdown_cells)
 
 
 def parse_rst_images(rst_content: str) -> DocImages:
@@ -237,7 +253,7 @@ def parse_rst_images(rst_content: str) -> DocImages:
         # find alt text
         alt_match = re.search(r":alt:\s*(.*?)\n", match.group(0))
         alt = alt_match.group(1).strip() if alt_match else ""
-        images.append((url, alt))
+        images.append((strip_str(url), strip_str(alt)))
 
     return DocImages(images)
 
@@ -246,3 +262,8 @@ def _ensure_dir_exists(directory: Path):
     """Ensure that the directory exists."""
     if not directory.exists():
         directory.mkdir(parents=True)
+
+
+def strip_str(s: str) -> str:
+    """Strip the string and remove quotes."""
+    return s.strip().strip('"').strip("'").strip("`").strip()

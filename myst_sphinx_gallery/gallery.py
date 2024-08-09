@@ -11,17 +11,29 @@ import nbformat
 from docutils.core import publish_doctree
 from docutils.nodes import title
 
-from .images import CellImages, DocImages, parse_md_images, parse_rst_images
+from .config import GalleryConfig
+from .images import (
+    CellImages,
+    DocImages,
+    load_nb_markdown,
+    parse_md_images,
+    parse_rst_images,
+)
 from .patterns import grid, grid_item_card, toc_gallery
 
 
-def generate_gallery(examples_dirs: Path, gallery_dirs: Path):
+def generate_gallery(gallery_config: GalleryConfig):
     """Generate the gallery from the examples directory."""
-    gallery = GalleryGenerator(
-        examples_dirs,
-        gallery_dirs,
-    )
-    gallery.convert()
+    n_gallery = len(gallery_config.gallery_dirs)
+    for i in range(n_gallery):
+        gallery = GalleryGenerator(
+            gallery_config.examples_dirs[i],
+            gallery_config.gallery_dirs[i],
+            gallery_config.thumbnail_strategy,
+            gallery_config.notebook_thumbnail_strategy,
+            gallery_config.default_thumbnail_file,
+        )
+        gallery.convert()
 
 
 class GalleryGenerator:
@@ -424,6 +436,8 @@ class ExampleConverter:
 
     def _load_content(self):
         """Load the content of the example file."""
+        if self.file_type == "notebook":
+            return load_nb_markdown(self.example_file)
         with open(self.example_file, "r", encoding="utf-8") as f:
             return f.read()
 
@@ -433,7 +447,7 @@ class ExampleConverter:
             shutil.copy(self.default_thumb, self.thumb_file)
 
     def _parse_doc_thumb(self, images: DocImages):
-        """Parse the thumb to be used in the gallery.
+        """Parse the thumb to be used in the gallery for images cross-referenced in the document.
 
         Returns
         -------
@@ -455,7 +469,7 @@ class ExampleConverter:
         return exists
 
     def _parse_cell_thumb(self, images: CellImages):
-        """Parse the thumb to be used in the gallery.
+        """Parse the thumb to be used in the gallery for images in the notebook code cells output.
 
         Returns
         -------
