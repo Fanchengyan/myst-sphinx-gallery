@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from myst_sphinx_gallery import gallery, generate_gallery
+from myst_sphinx_gallery import gallery, generate_gallery, GalleryConfig
 
 
 @pytest.fixture
@@ -26,13 +26,20 @@ def example_header_file(examples_dir):
     return examples_dir / "GALLERY_HEADER.rst"
 
 
-def test_parse_config():
-    pass
+@pytest.fixture
+def gallery_config(examples_dir, gallery_dir, cwd):
+    return GalleryConfig(
+        examples_dirs=[examples_dir],
+        gallery_dirs=[gallery_dir],
+        root_dir=cwd.parent,
+    )
 
 
-def test_generate_gallery(examples_dir, gallery_dir):
-    generate_gallery(examples_dir, gallery_dir)
-    assert (gallery_dir / "index.rst").exists()
+def test_generate_gallery(gallery_config):
+    generate_gallery(gallery_config)
+    index_file = gallery_config.gallery_dirs[0] / "index.rst"
+    print(index_file)
+    assert index_file.exists()
 
 
 def test_get_rst_title(example_header_file):

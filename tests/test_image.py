@@ -13,14 +13,14 @@ from myst_sphinx_gallery.images import (
 @pytest.fixture
 def cell_nb_file():
     cwd = Path(__file__).parent
-    nb_file = cwd.parent / "examples/code_markdown/plot_image.ipynb"
+    nb_file = cwd.parent / "examples/code_markdown/plot_image_code.ipynb"
     return nb_file
 
 
 @pytest.fixture
 def markdown_nb_file():
     cwd = Path(__file__).parent
-    nb_file = cwd.parent / "examples/02-first_last/image_url_nb_fl.ipynb"
+    nb_file = cwd.parent / "examples/00-alt/nb.ipynb"
     return nb_file
 
 
@@ -96,18 +96,18 @@ def rst_content():
     .. image:: img/fun-fish.png
         :alt: gallery_thumbnail
         :align: center
-        
+
     Secondary alt text
 
     .. image:: img/fun-fish.png
         :align: center
         :alt: gallery_thumbnail
-        
+
     No alt text
 
     .. image:: img/fun-fish.png
         :align: center
-        
+
     Figure syntax
     -------------
 
@@ -116,13 +116,13 @@ def rst_content():
     .. figure:: img/fun-fish.png
         :alt: gallery_thumbnail
         :align: center
-        
+
     Secondary alt text
 
     .. figure:: img/fun-fish.png
         :align: center
         :alt: gallery_thumbnail
-        
+
     No alt text
 
     .. figure:: img/fun-fish.png
@@ -170,4 +170,3 @@ def test_read_markdown_image(markdown_nb_file):
         md_content = f.read()
     images = parse_md_images(md_content)
     print(images.images)
-    print(md_content)
