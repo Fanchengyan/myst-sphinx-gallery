@@ -7,7 +7,7 @@ Using ``alt`` attribute (with number prefix)
 This section tests:
 
 
-- Testing the functionality with the ``alt`` strategy using the ``gallery_thumbnail`` as the ``alt`` attribute for different file types: ``.rst``, ``.ipynb``, and ``.md``.
+- Testing the functionality with the ``alt`` strategy: using the ``gallery_thumbnail`` as the ``alt`` attribute for different file types (``.rst``, ``.ipynb``, and ``.md``).
 - Verifying the examples order when the example files **have a number prefix in their name**.
 
 .. note::

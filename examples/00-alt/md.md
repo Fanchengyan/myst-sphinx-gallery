@@ -1,8 +1,8 @@
 # Markdown Image
 
-This is a ``.md`` gallery example with image URLs in the rst file to test ``gallery_thumbnail``. 
+This is a ``.md`` gallery example with image URLs in the rst file to test ``gallery_thumbnail``.
 
-Conventional markdown image syntax:
+## Conventional markdown image syntax
 
 ```markdown
 ![](/_static/bar_colors.png)
@@ -11,35 +11,27 @@ Conventional markdown image syntax:
 ![](/_static/bar_colors.png)
 
 
-Image with ``alt`` text:
+## Image with ``alt`` text
+
 ```markdown
 ![a random text](/_static/barchart.png)
 ```
 
 ![a random text](/_static/barchart.png)
 
-Image example:
 
-````markdown
-```{image} /_static/bar_colors.png
-   :align: center
-```
-````
 
-```{image} /_static/rgb.png
+## Figure example:
+
+
+````{code-block} markdown
+:emphasize-lines: 3
+```{figure} /_static/affine.png
    :align: center
+   :alt: gallery_thumbnail
    :width: 60%
-```
 
-
-Figure example:
-
-
-````markdown
-```{figure} /_static/rgb.png
-   :align: center
-
-This is the caption of the figure.
+This is the caption of the figure (a simple paragraph).
 ```
 ````
 
@@ -55,4 +47,18 @@ This figure directive has set the ``alt`` attribute to ``gallery_thumbnail``. Th
    :width: 60%
 
 This is the caption of the figure (a simple paragraph).
+```
+
+## Image example
+
+````markdown
+```{image} /_static/bar_colors.png
+   :align: center
+   :width: 60%
+```
+````
+
+```{image} /_static/rgb.png
+   :align: center
+   :width: 60%
 ```

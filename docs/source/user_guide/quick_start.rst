@@ -21,6 +21,7 @@ Configure and usages
 To use MyST Sphinx Gallery, you need to add the following code to the Sphinx ``conf.py`` file:
 
 .. code-block:: python
+    :caption: conf.py
 
     from pathlib import Path
 
@@ -36,28 +37,29 @@ To use MyST Sphinx Gallery, you need to add the following code to the Sphinx ``c
 
 You can configure all options by specifying the parameters for :class:`GalleryConfig <myst_sphinx_gallery.config.GalleryConfig>`.
 
-.. tip:: 
+.. tip::
 
-    You can generate multiple galleries by provide a list of paths to the ``examples_dirs`` and ``gallery_dirs`` parameters for :class:`GalleryConfig <myst_sphinx_gallery.config.GalleryConfig>`.
+    You can **generate multiple galleries** by proper configuration in the ``conf.py`` file. For more details, please refer to the :ref:`multi_galleries`.
 
 
-.. important:: 
+.. important::
 
     MyST Sphinx Gallery only helps you to generate the gallery. You need to enable the MyST parsers to render the markdown or jupyter notebook files by yourself.
-    
+
     For instance, to enable the MyST-NB, you can add the following code to the ``conf.py`` file:
 
     .. code-block:: python
+        :caption: conf.py
 
-       extensions = [
-           ...,
-           "myst_nb",
-       ]
+        extensions = [
+            ...,
+            "myst_nb",
+        ]
 
-       source_suffix = {
-            ".rst": "restructuredtext",
-            ".md": "myst-nb",
-            ".myst": "myst-nb",
+        source_suffix = {
+                ".rst": "restructuredtext",
+                ".md": "myst-nb",
+                ".myst": "myst-nb",
         }
 
     For more information, please refer to the documentation of `MyST <https://myst-parser.readthedocs.io/en/latest/>`_ and `MyST-NB  <https://myst-nb.readthedocs.io/en/latest/>`_.
@@ -86,7 +88,7 @@ Thumbnail strategy for files
 ----------------------------
 
 
-If there are multiple figures in an example file, you can specify the strategy to determine which thumbnail will be used for the gallery. The following strategies are supported: 
+If there are multiple figures in an example file, you can specify the strategy to determine which thumbnail will be used for the gallery. The following strategies are supported:
 
 1. **alt**: If the ``alt`` attribute of an image/figure is set to ``gallery_thumbnail``, that image/figure will be used as the gallery thumbnail for this file.
 2. **first/last**: If there are multiple images that can be used as the gallery thumbnail, the ``first/last`` image will be selected. You can specify the strategy by setting the ``thumbnail_strategy`` for :class:`~myst_sphinx_gallery.config.GalleryConfig`.
@@ -94,4 +96,3 @@ If there are multiple figures in an example file, you can specify the strategy t
 4. **default thumbnail**: If no image/figure is found, the default thumbnail will be used.
 
 More details can be found in the :ref:`thumbnail_strategy`.
-

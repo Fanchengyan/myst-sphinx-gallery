@@ -13,6 +13,7 @@ MyST Sphinx Gallery
 
    user_guide/index
    auto_examples/index
+   auto_examples2/index
    api/index
    contributing/index
 
@@ -28,7 +29,7 @@ MyST Sphinx Gallery
       :shadow: md
 
       Learn how to use **MyST Sphinx Gallery** to generate a gallery for a well-structured examples folder.
-      
+
       +++
 
       .. button-ref:: quick_start
@@ -60,9 +61,9 @@ MyST Sphinx Gallery
       :img-top: /_static/doc_index/index_api.svg
       :class-card: intro-card
       :shadow: md
-      
+
       Detailed API documentation for MyST Sphinx Gallery.
-      
+
       +++
 
       .. button-ref:: api

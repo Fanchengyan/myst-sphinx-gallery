@@ -20,8 +20,18 @@ myst_sphinx_gallery_config = GalleryConfig(
     gallery_dirs="auto_examples",
     root_dir=Path(__file__).parent,
     notebook_thumbnail_strategy="code",
+    thumbnail_strategy="last",
 )
 generate_gallery(myst_sphinx_gallery_config)
+
+myst_sphinx_gallery_config2 = GalleryConfig(
+    examples_dirs="../../examples2",
+    gallery_dirs="auto_examples2",
+    root_dir=Path(__file__).parent,
+    notebook_thumbnail_strategy="markdown",
+    thumbnail_strategy="first",
+)
+generate_gallery(myst_sphinx_gallery_config2)
 
 release = f"v{__version__}"
 

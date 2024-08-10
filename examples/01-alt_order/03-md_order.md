@@ -1,8 +1,8 @@
 # Markdown Image
 
-This is a ``.md`` gallery example with image URLs in the rst file to test ``gallery_thumbnail``. 
+This is a ``.md`` gallery example with image URLs in the rst file to test ``gallery_thumbnail``.
 
-Conventional markdown image syntax:
+## Conventional markdown image syntax
 
 ```markdown
 ![](/_static/bar_colors.png)
@@ -11,14 +11,15 @@ Conventional markdown image syntax:
 ![](/_static/bar_colors.png)
 
 
-Image with ``alt`` text:
+## Image with ``alt`` text
+
 ```markdown
 ![a random text](/_static/barchart.png)
 ```
 
 ![a random text](/_static/barchart.png)
 
-Image example:
+## Image directive
 
 ````markdown
 ```{image} /_static/bar_colors.png
@@ -32,12 +33,15 @@ Image example:
 ```
 
 
-Figure example:
+## Figure directive
 
 
-````markdown
+````{code-block} markdown
+:emphasize-lines: 3
 ```{figure} /_static/rgb.png
    :align: center
+   :alt: gallery_thumbnail
+   :width: 60%
 
 This is the caption of the figure.
 ```

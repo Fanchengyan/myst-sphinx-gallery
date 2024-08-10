@@ -27,11 +27,12 @@ in a Markdown/Notebook file ( ``*.md``/ ``*.ipynb`` ) with MyST syntax
 ``GALLERY_HEADER.rst`` files
 ----------------------------
 
-**You need to manually add a target in the first line** of the ``GALLERY_HEADER.rst`` file to enable cross-referencing. 
+**You need to manually add a target in the first line** of the ``GALLERY_HEADER.rst`` file to enable cross-referencing.
 
 For example, the file ``GALLERY_HEADER.rst`` contains the following content:
 
 .. code-block:: rst
+    :emphasize-lines: 1
 
     .. _example_basic_usages:
 
@@ -52,6 +53,6 @@ in a ReStructuredText file (``*.rst``)
 
 in a Markdown/Notebook file (``*.md,`` ``*.ipynb``) with MyST syntax
 
-.. code-block:: markdown 
+.. code-block:: markdown
 
     [Basic Usages](#example_basic_usages)

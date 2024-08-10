@@ -1,10 +1,10 @@
 .. _structuring_examples:
 
 =============================
-Structuring files for Gallery 
+Structuring files for Gallery
 =============================
 
-MyST Sphinx Gallery can help you to generate a gallery for a well-structured examples folder. 
+MyST Sphinx Gallery can help you to generate a gallery for a well-structured examples folder.
 
 Basic rules
 -----------
@@ -21,13 +21,14 @@ The file structure for the examples folder should follow the following rules:
 
     - The whole sub-folder will be ignored if it does not have the ``GALLERY_HEADER.rst`` file in it.
     - The ``GALLERY_HEADER.rst`` file will be converted to the ``index.rst`` for the gallery. Therefore, you need to use ``index`` rather that ``GALLERY_HEADER`` as the file name when cross-referencing.
-    
+
 Overview of the file structure
 ------------------------------
 
 For example, if you have the following file structure in your Python project:
 
 .. code-block:: bash
+    :emphasize-lines: 12
 
     .
     ├── doc
@@ -59,7 +60,8 @@ For example, if you have the following file structure in your Python project:
 
     In this case, you can add the following configuration to the Sphinx ``conf.py`` file:
 
-    .. code:: python
+    .. code-block:: python
+        :caption: conf.py
 
         myst_sphinx_gallery_config = GalleryConfig(
             examples_dirs="../examples",
@@ -71,6 +73,7 @@ For example, if you have the following file structure in your Python project:
 The examples folder will be converted to the following gallery in the doc:
 
 .. code-block:: bash
+    :emphasize-lines: 3
 
     .
     └── doc
@@ -90,15 +93,15 @@ The examples folder will be converted to the following gallery in the doc:
         ├── make.bat
         └── Makefile
 
-.. note:: 
+.. note::
 
     The number prefix in the directory/file names will be removed in the output gallery. See :ref:`example_order` for more details.
 
-To refer to the gallery in the documentation, you can directly add the generated gallery index to the 
-``toctree`` directive in the ``index.rst`` file:
+To refer to the gallery in the documentation, you can directly add the generated gallery index to the ``toctree`` directive in the ``index.rst`` file:
 
 .. code-block:: rst
     :emphasize-lines: 6
+    :caption: index.rst
 
     .. toctree::
         :maxdepth: 2
@@ -107,5 +110,3 @@ To refer to the gallery in the documentation, you can directly add the generated
         user_guide
         auto_examples/index
         api
-
-

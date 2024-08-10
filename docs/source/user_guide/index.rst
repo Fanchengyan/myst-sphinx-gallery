@@ -13,3 +13,4 @@ User Guide
    order
    thumb
    cross_reference
+   multi_galleries

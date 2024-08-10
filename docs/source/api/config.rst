@@ -4,6 +4,7 @@
 Gallery Configuration
 =====================
 
+This page documents the configuration options for the MyST Sphinx Gallery extension.
 
 GalleryConfig
 -------------

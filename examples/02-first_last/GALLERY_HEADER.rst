@@ -1,6 +1,7 @@
+.. _last_strategy_section:
+
 =======================
 ``first/last`` Strategy
 =======================
 
-
-This section tests the ``first/last`` strategy for selecting the first and last image in a gallery.
+This gallery is set to use the ``last`` strategy. The ``first`` strategy example is in the **Gallery Example 2** Section :ref:`first_strategy_section`.

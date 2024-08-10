@@ -7,7 +7,7 @@ Thumbnail Strategies
 Overview
 --------
 
-If there are multiple figures in an example file, you can specify the strategy to determine which thumbnail will be used for the gallery. The following strategies are supported: 
+If there are multiple figures in an example file, you can specify the strategy to determine which thumbnail will be used for the gallery. The following strategies are supported:
 
 1. **alt**: If the ``alt`` attribute of an image/figure is set to ``gallery_thumbnail``, that image/figure will be used as the gallery thumbnail for this file.
 2. **first/last**: If there are multiple images that can be used as the gallery thumbnail, the ``first/last`` image will be selected. You can specify the strategy by setting the ``thumbnail_strategy`` in the configuration file. The default value is ``first``.
@@ -26,6 +26,7 @@ ReStructuredText files
 1. image directive
 
 .. code-block:: rst
+   :emphasize-lines: 2
 
    .. image:: path/to/image.png
       :alt: gallery_thumbnail
@@ -34,6 +35,7 @@ ReStructuredText files
 2. figure directive
 
 .. code-block:: rst
+   :emphasize-lines: 2
 
    .. figure:: path/to/image.png
       :alt: gallery_thumbnail
@@ -51,7 +53,7 @@ Since ``myst-nb`` supports both markdown and notebook files, the syntax for mark
    - MyST Notebook: `myst-nb <https://myst-nb.readthedocs.io/en/latest/>`_
 
 
-1. Conventional markdown image syntax 
+1. Conventional markdown image syntax
 
    .. code-block:: markdown
 
@@ -60,16 +62,18 @@ Since ``myst-nb`` supports both markdown and notebook files, the syntax for mark
 2. MyST Images directive
 
    .. code-block:: markdown
+      :emphasize-lines: 2
 
-      ```{image} path/to/image.png 
+      ```{image} path/to/image.png
          :alt: gallery_thumbnail
       ```
 
-3. MyST Figure directive 
+3. MyST Figure directive
 
    .. code-block:: markdown
+      :emphasize-lines: 2
 
-      ```{figure} path/to/image.png 
+      ```{figure} path/to/image.png
          :alt: gallery_thumbnail
       ```
 
@@ -81,6 +85,7 @@ There may be multiple images are candidates for the gallery thumbnail for an exa
 If you want to use the last image as the gallery thumbnail, you can add the following configuration to the ``conf.py`` file:
 
 .. code-block:: python
+   :caption: conf.py
 
    myst_sphinx_gallery_config = GalleryConfig(
       ...,
@@ -97,6 +102,7 @@ For Jupyter notebook files, both ``markdown`` and ``code`` cells can contain ima
 For example, if you want to use the ``markdown`` cell as the gallery thumbnail, you can add the following configuration to the ``conf.py`` file:
 
 .. code-block:: python
+   :caption: conf.py
 
    myst_sphinx_gallery_config = GalleryConfig(
       ...,
@@ -106,7 +112,7 @@ For example, if you want to use the ``markdown`` cell as the gallery thumbnail, 
 default thumbnail
 -----------------
 
-If no image/figure is found, the default thumbnail will be used. You can specify the default thumbnail by setting the ``default_thumbnail_file`` in the configuration file. 
+If no image/figure is found, the default thumbnail will be used. You can specify the default thumbnail by setting the ``default_thumbnail_file`` in the configuration file.
 
 .. note::
 
@@ -115,9 +121,9 @@ If no image/figure is found, the default thumbnail will be used. You can specify
 For example, if you want to use the ``_static/thumbnail.png``, which is your custom image, as the default thumbnail, you can add the following configuration to the ``conf.py`` file:
 
 .. code-block:: python
+   :caption: conf.py
 
    myst_sphinx_gallery_config = GalleryConfig(
       ...,
       default_thumbnail_file = "_static/thumbnail.png",
       )
-

@@ -4,9 +4,28 @@
 Gallery Example
 ===============
 
-This is a gallery example. It is used to illustrate the functionality of the gallery.
+This is the **first gallery example**, which provides a comprehensive overview of the MyST Sphinx Gallery extension.
 
-.. tip:: 
+Additional illustrations of the thumbnail strategies can be found in :ref:`gallery2_header`.
 
-    For each example, you can click on the "Show Source" button in the right side panel to see the source code.
 
+.. admonition:: conf.py
+    :class: dropdown
+
+    The following configuration is used to in the ``conf.py`` file for this gallery:
+
+    .. code-block:: python
+        :caption: conf.py
+        :emphasize-lines: 8,9
+
+        from pathlib import Path
+        from myst_sphinx_gallery import GalleryConfig, generate_gallery
+
+        myst_sphinx_gallery_config = GalleryConfig(
+            examples_dirs="../../examples",
+            gallery_dirs="auto_examples",
+            root_dir=Path(__file__).parent,
+            notebook_thumbnail_strategy="code",
+            thumbnail_strategy="last",
+        )
+        generate_gallery(myst_sphinx_gallery_config)
