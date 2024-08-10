@@ -36,7 +36,6 @@ Configure and usages
 To use MyST Sphinx Gallery, you need to add the following code to the Sphinx ``conf.py`` file:
 
 .. code-block:: python
-    :caption: conf.py
 
     from pathlib import Path
 
