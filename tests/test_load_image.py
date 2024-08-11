@@ -9,8 +9,15 @@ from myst_sphinx_gallery.images import (
     parse_rst_images,
 )
 
-cwd = Path(__file__).parent
-cell_nb_file = cwd.parent / "examples/code_markdown/plot_image_code.ipynb"
+
+@pytest.fixture
+def cwd():
+    return Path(__file__).parent
+
+
+@pytest.fixture
+def cell_nb_file(cwd):
+    return cwd.parent / "examples/code_markdown/plot_image_code.ipynb"
 
 
 @pytest.fixture

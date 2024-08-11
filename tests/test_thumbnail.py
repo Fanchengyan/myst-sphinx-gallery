@@ -15,62 +15,59 @@ images = list(data_dir.glob("*.gif"))
 png_files = list(data_dir.glob("*.png"))
 
 
-def parse_image_size(thumb: Thumbnail):
-    # pytest -s tests/test_thumbnail.py
-    with Image.open(thumb.path) as img:
-        print(f"{thumb.path.name} : {img.size}")
-    with Image.open(thumb.output_file) as img:
-        print(f"{thumb.output_file.name} : {img.size}", end="\n\n")
-
-
 @pytest.mark.slow
 class TestThumbnail:
     def test_thumbnail(self):
         print("=======================================")
+        print("Test thumbnail")
         for img in images + png_files:
             thumb = Thumbnail(img, out_dir, (400, 280))
-            thumb.save_thumbnail()
-            parse_image_size(thumb)
+            thumb_file = thumb.save_thumbnail()
+            print(img, thumb_file, sep=" -> ")
 
     def test_thumbnail_contain(self):
         print("=======================================")
+        print("Test thumbnail contain")
         for img in images + png_files:
             thumb = Thumbnail(img, out_dir, (400, 280), operation="contain")
-            thumb.save_thumbnail()
-            parse_image_size(thumb)
+            thumb_file = thumb.save_thumbnail()
+            print(img, thumb_file, sep=" -> ")
 
     def test_thumbnail_cover(self):
         print("=======================================")
+        print("Test thumbnail cover")
         for img in images + png_files:
             thumb = Thumbnail(img, out_dir, (400, 280), operation="cover")
-            thumb.save_thumbnail()
-            parse_image_size(thumb)
+            thumb_file = thumb.save_thumbnail()
+            print(img, thumb_file, sep=" -> ")
 
     def test_thumbnail_fit(self):
         print("=======================================")
+        print("Test thumbnail fit")
         for img in images + png_files:
             thumb = Thumbnail(img, out_dir, (400, 280), operation="fit")
-            thumb.save_thumbnail()
-            parse_image_size(thumb)
+            thumb_file = thumb.save_thumbnail()
+            print(img, thumb_file, sep=" -> ")
 
     def test_thumbnail_pad(self):
         print("=======================================")
+        print("Test thumbnail pad")
         for img in images + png_files:
             thumb = Thumbnail(img, out_dir, (400, 280), operation="pad")
-            thumb.save_thumbnail()
-            parse_image_size(thumb)
+            thumb_file = thumb.save_thumbnail()
+            print(img, thumb_file, sep=" -> ")
 
     def test_thumbnail_save_kwargs(self):
         print("=======================================")
+        print("Test thumbnail save kwargs")
         for img in images + png_files:
-            thumb = Thumbnail(
-                img, out_dir, (400, 280), save_kwargs={"lossless": "True"}
-            )
-            thumb.save_thumbnail()
-            parse_image_size(thumb)
+            thumb = Thumbnail(img, out_dir, (400, 280), save_kwargs={"lossless": True})
+            thumb_file = thumb.save_thumbnail()
+            print(img, thumb_file, sep=" -> ")
 
     def test_thumbnail_operation_kwargs(self):
         print("=======================================")
+        print("Test thumbnail operation kwargs")
         for img in images + png_files:
             thumb = Thumbnail(
                 img,
@@ -79,5 +76,5 @@ class TestThumbnail:
                 operation="pad",
                 operation_kwargs={"color": "white"},
             )
-            thumb.save_thumbnail()
-            parse_image_size(thumb)
+            thumb_file = thumb.save_thumbnail()
+            print(img, thumb_file, sep=" -> ")

@@ -69,9 +69,9 @@ class TestGrid:
         grid = Grid()
         print(grid.pattern)
         grid.add_item("item1")
-        assert grid.pattern == "\n\n.. grid:: 2 3 3 4\n\n    item1\n"
+        assert grid.pattern == "\n\n.. grid:: 2 3 3 4\n\nitem1\n"
         grid.add_item("item2")
-        assert grid.pattern == "\n\n.. grid:: 2 3 3 4\n\n    item1\n    item2\n"
+        assert grid.pattern == "\n\n.. grid:: 2 3 3 4\n\nitem1\nitem2\n"
 
 
 class TestGridItemCard:
