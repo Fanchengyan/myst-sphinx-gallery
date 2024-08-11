@@ -37,4 +37,3 @@ will be displayed in the gallery as:
          ├── basic-example3
          ├── basic-example2
          └── basic-example1
-

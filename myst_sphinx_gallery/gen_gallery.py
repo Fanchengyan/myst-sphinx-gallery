@@ -1,5 +1,5 @@
 """
-Sphinx extension to generate a gallery from Jupyter notebooks, MyST markdown, and reStructuredText files. 
+Sphinx extension to generate a gallery from Jupyter notebooks, MyST markdown, and reStructuredText files.
 """
 
 from __future__ import annotations

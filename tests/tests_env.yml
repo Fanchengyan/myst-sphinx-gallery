@@ -1,0 +1,10 @@
+name: myst_sphinx_gallery
+channels:
+  - conda-forge
+
+dependencies:
+  - coverage
+  - pytest
+  - pytest-cov
+  - matplotlib
+  - numpy

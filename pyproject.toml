@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "myst_sphinx_gallery"
 description = "A Sphinx extension that builds galleries of examples from any set of myst-style markdown/notebook or rst files."
-readme = "README.rst"
+readme = "README.md"
 license = { "text" = 'MIT License' }
 authors = [
   { name = "Chengyan Fan (Fancy)", email = 'fanchengyan@outlook.com' },
@@ -52,7 +52,7 @@ dependencies = [
 [project.optional-dependencies]
 
 code_style = ["pre-commit"]
-testing = [
+test = [
   "coverage",
   "pytest",
   "pytest-cov",
@@ -62,7 +62,7 @@ testing = [
   # "pytest-param-files~=0.3.3",
 
 ]
-dev = ["pre-commit",  
+dev = ["pre-commit",
   "coverage",
   "pytest",
   "pytest-cov",
@@ -107,4 +107,5 @@ filterwarnings = [
 markers = [
   "add_conf: Configuration file.",
   "add_rst: Add rst file to src.",
+  "slow: marks tests as slow",
 ]

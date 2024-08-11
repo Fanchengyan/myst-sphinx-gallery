@@ -20,7 +20,7 @@ image directive with ``alt`` set to ``gallery_thumbnail``
 
 .. code-block:: rst
 
-    .. image:: /_static/bar_colors.png
+    .. image:: /_static/example_basics.gif
         :align: center
         :alt: gallery_thumbnail
 
@@ -28,7 +28,7 @@ image directive with ``alt`` set to ``gallery_thumbnail``
 
     This image directive has set the ``alt`` attribute to ``gallery_thumbnail``. Therefore, This image will be used as the thumbnail for the gallery.
 
-.. image:: /_static/bar_colors.png
+.. image:: /_static/example_basics.gif
     :align: center
     :alt: gallery_thumbnail
 

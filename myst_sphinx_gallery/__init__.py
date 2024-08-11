@@ -6,6 +6,7 @@ MyST Sphinx Gallery
 
 from .config import GalleryConfig
 from .gallery import generate_gallery
+from .grid import Grid, GridItemCard, TocTree
 
 # dev versions should have "dev" in them, stable should not.
 # doc/conf.py makes use of this to set the version drop-down.

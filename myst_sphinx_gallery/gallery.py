@@ -2,6 +2,8 @@
 A module for managing the gallery of examples.
 """
 
+from __future__ import annotations
+
 import shutil
 import warnings
 from pathlib import Path
@@ -12,14 +14,16 @@ from docutils.core import publish_doctree
 from docutils.nodes import title
 
 from .config import GalleryConfig
+from .grid import Grid, GridItemCard, TocTree
 from .images import (
     CellImages,
     DocImages,
+    Thumbnail,
     load_nb_markdown,
     parse_md_images,
     parse_rst_images,
 )
-from .patterns import grid, grid_item_card, toc_gallery
+from .io_tools import abs_path, ensure_dir_exists, safe_remove_file
 
 
 def generate_gallery(gallery_config: GalleryConfig):
@@ -29,9 +33,7 @@ def generate_gallery(gallery_config: GalleryConfig):
         gallery = GalleryGenerator(
             gallery_config.examples_dirs[i],
             gallery_config.gallery_dirs[i],
-            gallery_config.thumbnail_strategy,
-            gallery_config.notebook_thumbnail_strategy,
-            gallery_config.default_thumbnail_file,
+            gallery_config,
         )
         gallery.convert()
 
@@ -45,9 +47,7 @@ class GalleryGenerator:
         self,
         examples_dir: Path,
         gallery_dir: Path,
-        thumbnail_strategy: Literal["first", "last"] = "first",
-        notebook_thumbnail_strategy: Literal["code", "markdown"] = "code",
-        default_thumb: Path | str = None,
+        config: GalleryConfig,
     ) -> None:
         """Initialize the GalleryGenerator object.
 
@@ -55,19 +55,10 @@ class GalleryGenerator:
             The path to the input examples directory.
         gallery_dir : Path
             The path to the output gallery directory.
-        thumbnail_strategy : Literal["first", "last"]
-            The strategy for selecting the thumbnail image if multiple images
-            are found in the example file.
-        notebook_thumbnail_strategy : Literal["code", "markdown"]
-            The strategy for selecting the thumbnail image if multiple images
-            are found in the example file.
-        default_thumb : Path | str
-            The default thumbnail image to use if no image is found in the example
-            file.
+        config : GalleryConfig
+            The gallery configuration.
         """
-        self.thumbnail_strategy = thumbnail_strategy
-        self.notebook_thumbnail_strategy = notebook_thumbnail_strategy
-        self.default_thumb = default_thumb
+        self.config = config
 
         self.examples_dir = Path(examples_dir).absolute()
         self.gallery_dir = Path(gallery_dir).absolute()
@@ -75,8 +66,11 @@ class GalleryGenerator:
         self._header_file = self._scan_header_file()
         self._folders = self._scan_example_folders()
 
-        self.toc_str = ""
-        self.grid_str = ""
+        self._toc_tree = config.toc_tree.copy()
+        self._grid = config.grid.copy()
+        self._grid_item_card = config.grid_item_card.copy()
+
+        self._sections = ""
 
     def _scan_header_file(self):
         """Scan header file for the whole gallery."""
@@ -117,30 +111,45 @@ class GalleryGenerator:
 
     @property
     def toc(self) -> str:
-        """The table of contents for the gallery."""
-        return toc_gallery + self.toc_str
+        """The table of contents string for the gallery."""
+        return str(self._toc_tree)
 
     @property
-    def grid(self) -> str:
-        """The grid for the gallery."""
-        return self.grid_str
+    def sections(self) -> str:
+        """The sections for the gallery."""
+        return self._sections
+
+    @property
+    def toc_tree(self) -> TocTree:
+        """The table of contents tree options for the gallery."""
+        return self._toc_tree.copy()
+
+    @property
+    def grid(self) -> Grid:
+        """The grid options for the gallery."""
+        return self._grid.copy()
+
+    @property
+    def grid_item_card(self) -> GridItemCard:
+        """The grid item card options for the gallery."""
+        return self._grid_item_card.copy()
 
     def add_toc_item(self, section_index_file: str):
-        """Update the gallery table of contents."""
-        rel_path = section_index_file.relative_to(self.gallery_dir)
-        self.toc_str += f"\n    {rel_path}"
+        """add a toc item for the gallery."""
+        item = self._toc_tree.parse_item(section_index_file, self.gallery_dir)
+        self._toc_tree.add_item(item)
 
-    def add_grid_item(self, title: str, section_grid: str):
-        """Update the gallery grid."""
-        grid_title = to_section_title(title)
-        gird = grid_title + section_grid
-        self.grid_str += gird
+    def add_section_item(self, title: str, section_grid: str):
+        """add a section item to the gallery."""
+        title = to_section_title(title)
+        section = title + section_grid
+        self._sections += section
 
     def convert_to_index_file(self):
         """Convert the gallery header file."""
         safe_remove_file(self.index_file)
         write_index_file(self.header_file, self.index_file, self.toc)
-        write_index_file(self.header_file, self.index_file, self.grid)
+        write_index_file(self.header_file, self.index_file, self.sections)
 
     def convert(self):
         """Convert the examples to gallery."""
@@ -149,14 +158,12 @@ class GalleryGenerator:
                 folder / "GALLERY_HEADER.rst",
                 self.examples_dir,
                 self.gallery_dir,
-                self.thumbnail_strategy,
-                self.notebook_thumbnail_strategy,
-                self.default_thumb,
+                self.config,
             )
             section.convert()
             self.add_toc_item(section.index_file)
             title = get_rst_title(section.index_file)
-            self.add_grid_item(title, section.grid)
+            self.add_section_item(title, section.section_grid)
         self.convert_to_index_file()
 
 
@@ -170,9 +177,7 @@ class SectionGenerator:
         header_file: Path,
         examples_dir: Path,
         gallery_dir: Path,
-        thumbnail_strategy: Literal["first", "last"] = "first",
-        notebook_thumbnail_strategy: Literal["code", "markdown"] = "code",
-        default_thumb: Path | str = None,
+        config: GalleryConfig,
     ) -> None:
         """Initialize the SectionGenerator object.
 
@@ -182,20 +187,20 @@ class SectionGenerator:
             The path to the input examples directory.
         gallery_dir : Path
             The path to the output gallery directory.
+        config : GalleryConfig
+            The gallery configuration.
         """
-        self.thumbnail_strategy = thumbnail_strategy
-        self.notebook_thumbnail_strategy = notebook_thumbnail_strategy
-        self.default_thumb = default_thumb
-
         self.examples_dir = Path(examples_dir)
         self.gallery_dir = Path(gallery_dir)
         self._header_file = Path(header_file)
+        self._config = config
 
         self._example_files = self._scan_example_files()
         self._index_file = self._parse_index_file()
 
-        self.grid_item_card_str = ""
-        self.toc_str = ""
+        self._toc_tree = config.toc_tree.copy()
+        self._grid = config.grid.copy()
+        self._grid_item_card = config.grid_item_card.copy()
 
     def _scan_example_files(self):
         """Parse the example files in the subfolder."""
@@ -221,6 +226,11 @@ class SectionGenerator:
         return index_file
 
     @property
+    def config(self) -> GalleryConfig:
+        """The gallery configuration."""
+        return self._config
+
+    @property
     def header_file(self) -> Path:
         """path to the gallery header file."""
         return self._header_file
@@ -237,23 +247,36 @@ class SectionGenerator:
 
     @property
     def toc(self) -> str:
-        """The table of contents for the gallery subsection."""
-        return toc_gallery + self.toc_str
+        """The table of contents for gallery section."""
+        return str(self._toc_tree)
 
     @property
-    def grid(self) -> str:
-        """The grid for the gallery subsection."""
-        return grid + self.grid_item_card_str
+    def section_grid(self) -> str:
+        """The grid for the gallery section."""
+        return str(self._grid)
 
-    def update_section_grid_card(self, target_ref: str, img_path: str) -> str:
-        """Update the toc and grid item card string ."""
-        self.grid_item_card_str += grid_item_card.format(
-            target_ref=target_ref, img_path=img_path
-        )
+    @property
+    def toc_tree(self) -> TocTree:
+        """The table of contents options for gallery section."""
+        return self._toc_tree.copy()
 
-    def update_section_toc(self, index_file: str):
-        """Update the toc string."""
-        self.toc_str += f"\n    {index_file.stem}"
+    @property
+    def grid(self) -> Grid:
+        """The grid options for gallery section."""
+        return self._grid.copy()
+
+    @property
+    def grid_item_card(self) -> GridItemCard:
+        """The grid item card options for gallery section."""
+        return self._grid_item_card.copy()
+
+    def add_grid_card(self, target_ref: str, img_path: str) -> str:
+        """add a grid card for the gallery section grid."""
+        self._grid.add_item(self._grid_item_card.format(target_ref, img_path))
+
+    def add_example_to_toc(self, gallery: str):
+        """add a example to the table of contents of section."""
+        self._toc_tree.add_item(gallery.stem)
 
     def convert_section_header_file(self):
         """Convert the header file of the subfolder to a standardized header file,
@@ -261,22 +284,17 @@ class SectionGenerator:
         """
         safe_remove_file(self.index_file)
         write_index_file(self.header_file, self.index_file, self.toc)
-        write_index_file(self.header_file, self.index_file, self.grid)
+        write_index_file(self.header_file, self.index_file, self.section_grid)
 
     def convert(self):
         """Convert the example files to standardized example files."""
         for example_file in self.example_files:
             conv = ExampleConverter(
-                example_file,
-                self.examples_dir,
-                self.gallery_dir,
-                self.thumbnail_strategy,
-                self.notebook_thumbnail_strategy,
-                self.default_thumb,
+                example_file, self.examples_dir, self.gallery_dir, self.config
             )
             conv.convert()
-            self.update_section_grid_card(conv.target_ref, conv.gallery_thumb)
-            self.update_section_toc(conv.index_file)
+            self.add_grid_card(conv.target_ref, conv.gallery_thumb)
+            self.add_example_to_toc(conv.gallery_file)
 
         self.convert_section_header_file()
 
@@ -289,16 +307,14 @@ class ExampleConverter:
 
     _file_type: Literal["notebook", "markdown", "rst"]
     _gallery_thumb: Path | None = None
-    _thumbnail: Path | None = None
+    _thumbnail: Thumbnail | None = None
 
     def __init__(
         self,
         example_file: Path | str,
         examples_dir: Path | str,
         gallery_dir: Path | str,
-        thumbnail_strategy: Literal["first", "last"] = "first",
-        notebook_thumbnail_strategy: Literal["code", "markdown"] = "code",
-        default_thumb: Path | str = None,
+        config: GalleryConfig,
     ) -> None:
         """Initialize the ExampleConverter.
 
@@ -308,23 +324,21 @@ class ExampleConverter:
             The path to the input examples directory.
         gallery_dir : Path | str
             The path to the output gallery directory.
-        thumbnail_strategy : Literal["first", "last"]
-            The strategy for selecting the thumbnail image if multiple images
-            are found in the example file.
-        default_thumb : Path | str
-            The default thumbnail image to use if no image is found in the example
-            file.
+        config : GalleryConfig
+            The gallery configuration.
         """
-        self.thumbnail_strategy = thumbnail_strategy
-        self.notebook_thumbnail_strategy = notebook_thumbnail_strategy
+        self._config = config
+        self.thumbnail_strategy = config.thumbnail_strategy
+        self.notebook_thumbnail_strategy = config.notebook_thumbnail_strategy
         self._example_file = Path(example_file)
         self.examples_dir = Path(examples_dir)
         self.gallery_dir = Path(gallery_dir)
         ensure_dir_exists(self.gallery_dir)
 
-        self._index_file, self._relative_path = self._parse_paths()
+        self._gallery_file, self._relative_path = self._parse_paths()
         self._file_type = self._parse_example_type()
-        self._default_thumb = self._ensure_default_thumb(default_thumb)
+        self._default_thumb = self._ensure_default_thumb(config.default_thumbnail_file)
+        self._thumbnail = None
 
     def _ensure_default_thumb(self, default_thumb: Path | str) -> Path:
         """Ensure the default thumbnail image exists."""
@@ -337,18 +351,18 @@ class ExampleConverter:
         # relative path
         relative_path = self.example_file.relative_to(self.examples_dir)
 
-        _index_file = self.gallery_dir / relative_path
-        if not _index_file.parent.parent.samefile(self.gallery_dir):
+        gallery_file = self.gallery_dir / relative_path
+        if not gallery_file.parent.parent.samefile(self.gallery_dir):
             raise ValueError(
                 f"Too many levels of subfolders in the example file: {self.example_file}\n"
                 "only one level of subfolders is allowed."
             )
 
         # Remove the index prefix from the folder and file name for the gallery file
-        folder, name = remove_num_prefix(_index_file)
+        folder, name = remove_num_prefix(gallery_file)
 
-        index_file = self.gallery_dir / folder / name
-        return index_file, relative_path
+        gallery_file = self.gallery_dir / folder / name
+        return gallery_file, relative_path
 
     def _parse_example_type(self) -> Literal["notebook", "markdown", "rst"]:
         """Parse the example file type."""
@@ -363,6 +377,11 @@ class ExampleConverter:
                 f"Unrecognized file type: {self.example_file.suffix} for {self.example_file}"
             )
         return file_type
+
+    @property
+    def config(self) -> GalleryConfig:
+        """The gallery configuration."""
+        return self._config
 
     @property
     def file_type(self) -> Literal["notebook", "markdown", "rst"]:
@@ -380,9 +399,9 @@ class ExampleConverter:
         return self._example_file
 
     @property
-    def index_file(self) -> Path:
+    def gallery_file(self) -> Path:
         """path to the output gallery file."""
-        return self._index_file
+        return self._gallery_file
 
     @property
     def target_str(self) -> str:
@@ -408,17 +427,18 @@ class ExampleConverter:
         return self._default_thumb
 
     @property
-    def thumb_file(self) -> Path:
-        """path to the thumbnail image for the example."""
-        folder = self.gallery_dir / "myst_sphinx_gallery_thumbs"
-        ensure_dir_exists(folder)
-        thumb_file = folder / f"{self.index_file.stem}_thumb.png"
-        return thumb_file
+    def thumb_dir(self) -> Path:
+        """path to the thumbnail directory for the example."""
+        return self.gallery_dir / "myst_sphinx_gallery_thumbs"
 
     @property
-    def thumb_file_rel(self) -> str:
+    def no_image_thumb(self) -> Path:
+        """path to the no image thumbnail."""
+        return self.thumb_dir / "no_image.webp"
+
+    def thumb_file_rel(self, thumb_file: Path) -> str:
         """relative path to the thumbnail image for the example."""
-        thumb_file_rel = self.thumb_file.relative_to(self.gallery_dir).as_posix()
+        thumb_file_rel = thumb_file.relative_to(self.gallery_dir).as_posix()
         thumb_file_rel = f"/{self.gallery_dir.stem}/{thumb_file_rel}"
         return thumb_file_rel
 
@@ -441,10 +461,13 @@ class ExampleConverter:
         with open(self.example_file, "r", encoding="utf-8") as f:
             return f.read()
 
-    def _safe_copy_thumb(self):
-        """Copy the thumbnail image to the gallery."""
-        if not self.thumb_file.exists():
-            shutil.copy(self.default_thumb, self.thumb_file)
+    def _use_default_thumbnail(self):
+        """Use the default thumbnail image as the gallery file thumb."""
+        self._gallery_thumb = self.thumb_file_rel(self.no_image_thumb)
+        if self.no_image_thumb.exists():
+            return
+        thumbnail = Thumbnail(self.default_thumb, self.thumb_dir)
+        thumbnail.save_thumbnail(self.no_image_thumb)
 
     def _parse_doc_thumb(self, images: DocImages):
         """Parse the thumb to be used in the gallery for images cross-referenced in the document.
@@ -458,13 +481,16 @@ class ExampleConverter:
         if len(images) > 0:
             thumbs = images.sel_urls("gallery_thumbnail")
             if len(thumbs) > 0:
-                self._gallery_thumb = thumbs[self.thumb_idx]
+                gallery_thumb = thumbs[self.thumb_idx]
             else:
-                self._gallery_thumb = images[self.thumb_idx]
+                gallery_thumb = images[self.thumb_idx]
+            gallery_thumb = self.config.abs_path(gallery_thumb)
+            thumbnail = Thumbnail(gallery_thumb, self.thumb_dir)
+            gallery_thumb = thumbnail.save_thumbnail()
+            self._gallery_thumb = self.thumb_file_rel(gallery_thumb)
         else:
             exists = False
-            self._safe_copy_thumb()
-            self._gallery_thumb = self.thumb_file_rel
+            self._use_default_thumbnail()
 
         return exists
 
@@ -478,12 +504,14 @@ class ExampleConverter:
         """
         exists = True
         if len(images) > 0:
-            images.save_image(self.thumb_file, self.thumb_idx)
-            self._gallery_thumb = self.thumb_file_rel
+            gallery_thumb = self.thumb_dir / f"{self.example_file.stem}.webp"
+            thumbnail = Thumbnail(images.images[self.thumb_idx], self.thumb_dir)
+            thumbnail.save_thumbnail(gallery_thumb)
+            self._gallery_thumb = self.thumb_file_rel(gallery_thumb)
         else:
             exists = False
-            self._safe_copy_thumb()
-            self._gallery_thumb = self.thumb_file_rel
+            self._use_default_thumbnail()
+
         return exists
 
     def _parse_thumb(self):
@@ -518,8 +546,8 @@ class ExampleConverter:
         new_cell = nbformat.v4.new_markdown_cell(self.target_str)
         notebook.cells.insert(0, new_cell)
 
-        ensure_dir_exists(self.index_file.parent)
-        with open(self.index_file, "w", encoding="utf-8") as f:
+        ensure_dir_exists(self.gallery_file.parent)
+        with open(self.gallery_file, "w", encoding="utf-8") as f:
             nbformat.write(notebook, f)
 
     def _convert_text_file(self):
@@ -529,8 +557,8 @@ class ExampleConverter:
 
         # Add a reference to the markdown/rst file
         new_content = f"{self.target_str}\n\n{content}"
-        ensure_dir_exists(self.index_file.parent)
-        with open(self.index_file, "w", encoding="utf-8") as f:
+        ensure_dir_exists(self.gallery_file.parent)
+        with open(self.gallery_file, "w", encoding="utf-8") as f:
             f.write(new_content)
 
     def convert(self):
@@ -541,18 +569,6 @@ class ExampleConverter:
             self._convert_text_file()
 
         self._parse_thumb()
-
-
-def ensure_dir_exists(directory: Path):
-    """Ensure that the directory exists."""
-    if not directory.exists():
-        directory.mkdir(parents=True)
-
-
-def safe_remove_file(file: Path):
-    """Remove a file if it exists."""
-    if file.exists():
-        file.unlink()
 
 
 def write_index_file(

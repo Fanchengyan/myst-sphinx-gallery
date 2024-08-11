@@ -11,10 +11,13 @@ from myst_sphinx_gallery.images import (
 
 
 @pytest.fixture
-def cell_nb_file():
-    cwd = Path(__file__).parent
-    nb_file = cwd.parent / "examples/code_markdown/plot_image_code.ipynb"
-    return nb_file
+def cwd():
+    return Path(__file__).parent
+
+
+@pytest.fixture
+def cell_nb_file(cwd):
+    return cwd.parent / "examples/code_markdown/plot_image_code.ipynb"
 
 
 @pytest.fixture
