@@ -83,7 +83,7 @@ class Thumbnail:
     def __repr__(self) -> str:
         return f"Thumbnail(path={self.path})"
 
-    def _format_save_kwargs(self, save_kwargs: dict[str, int]) -> dict[str, int]:
+    def _format_save_kwargs(self, save_kwargs: dict) -> dict:
         """Format the save keyword arguments."""
         if not isinstance(save_kwargs, dict):
             raise ValueError("save_kwargs must be a dictionary")

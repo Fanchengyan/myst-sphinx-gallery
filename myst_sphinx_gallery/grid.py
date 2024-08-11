@@ -88,6 +88,8 @@ class Grid:
 
     def __post_init__(self):
         self.pattern = f"\n\n.. grid:: {format_params(self.grid_option)}\n"
+        self._no_items = True
+        self.options = {}
 
         if self.gutter:
             self.add_option("gutter", self.gutter)
@@ -99,9 +101,6 @@ class Grid:
             self.add_option("outline", self.outline)
         if self.reverse:
             self.add_option("reverse", self.reverse)
-
-        self._no_items = True
-        self.options = {}
 
     def __str__(self) -> str:
         return self.pattern
@@ -154,15 +153,15 @@ class GridItemCard:
 
     def __post_init__(self):
         self.pattern = grid_item_card
+        self._no_items = True
+        self.options = {}
+
         if self.columns:
             self.add_option("columns", self.columns)
         if self.margin:
             self.add_option("margin", self.margin)
         if self.padding:
             self.add_option("padding", self.padding)
-
-        self._no_items = True
-        self.options = {}
 
     def __str__(self) -> str:
         return self.pattern
