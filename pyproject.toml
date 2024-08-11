@@ -52,7 +52,7 @@ dependencies = [
 [project.optional-dependencies]
 
 code_style = ["pre-commit"]
-testing = [
+test = [
   "coverage",
   "pytest",
   "pytest-cov",
