@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "myst_sphinx_gallery"
 description = "A Sphinx extension that builds galleries of examples from any set of myst-style markdown/notebook or rst files."
-readme = "README.rst"
+readme = "README.md"
 license = { "text" = 'MIT License' }
 authors = [
   { name = "Chengyan Fan (Fancy)", email = 'fanchengyan@outlook.com' },
