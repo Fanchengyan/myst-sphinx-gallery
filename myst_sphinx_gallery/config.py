@@ -1,8 +1,11 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
+
+from .grid import Grid, GridItemCard, TocTree
+from .io_tools import abs_path
 
 
 @dataclass
@@ -31,7 +34,7 @@ class GalleryConfig:
     #:
     #: .. note::
     #:
-    #:    1. If the paths are relative, ``root_dir`` must be provided.
+    #:    1. The paths is relative to the root directory.
     #:    2. If a list of paths is provided, the number of paths must match
     #:       the number of paths in ``gallery_dirs``.
     examples_dirs: Path | str | list[Path | str]
@@ -40,22 +43,18 @@ class GalleryConfig:
     #:
     #: .. note::
     #:
-    #:    1. If the paths are relative, ``root_dir`` must be provided.
+    #:    1. The paths is relative to the root directory.
     #:    2. If a list of paths is provided, the number of paths must match the
     #:       number of paths in ``example_dirs``.
     gallery_dirs: Path | str | list[Path | str]
 
     #: The root directory for any relative paths in this configuration.
     #:
-    #: .. important::
-    #:    This is must be provided if the paths in ``examples_dirs`` and
-    #:    ``gallery_dirs`` are relative.
-    #:
     #: .. tip::
     #:    You can use the ``__file__`` variable to get the path to the
     #:    current file if you are using this configuration in ``conf.py``.
     #:    For example, ``Path(__file__).parent`` is the root directory in this case.
-    root_dir: Path | str | None = None
+    root_dir: Path | str
 
     #: The strategy to use for selecting the thumbnail image for each example
     #: if multiple images are candidates.
@@ -70,6 +69,18 @@ class GalleryConfig:
     #: If None, a default thumbnail image in this package will be used.
     default_thumbnail_file: Path | str | None = None
 
+    #: A instance of the TocTree class to create a table of content for the
+    #: gallery images. Currently, no additional options are supported.
+    toc_tree: TocTree = field(default_factory=TocTree)
+
+    #: The grid configuration for the gallery images. You can customize the
+    #: grid layout using this configuration.
+    grid: Grid = field(default_factory=Grid)
+
+    #: The grid item card configuration for the gallery images. You can customize
+    #: the grid item card using this configuration.
+    grid_item_card: GridItemCard = field(default_factory=GridItemCard)
+
     def __post_init__(self):
         if isinstance(self.examples_dirs, (Path, str)):
             self.examples_dirs = [self.examples_dirs]
@@ -81,25 +92,20 @@ class GalleryConfig:
                 "The number of paths in examples_dirs and gallery_dirs must match"
             )
 
-        if self.root_dir is None and any(
-            Path(d).is_absolute() for d in self.examples_dirs + self.gallery_dirs
-        ):
-            raise ValueError(
-                "root_dir must be provided if examples_dirs or gallery_dirs are absolute paths"
-            )
-
         self.examples_dirs = [self.abs_path(d) for d in self.examples_dirs]
         self.gallery_dirs = [self.abs_path(d) for d in self.gallery_dirs]
 
         if self.default_thumbnail_file is not None:
             self.default_thumbnail_file = self.abs_path(self.default_thumbnail_file)
 
+        # clear the items in toc_tree, grid, and grid_item_card, keeping the options
+        self.toc_tree = self.toc_tree.copy()
+        self.grid = self.grid.copy()
+        self.grid_item_card = self.grid_item_card.copy()
+
     def abs_path(self, path: Path | str) -> Path:
         """Convert a path to an absolute path using the root directory"""
-        path = Path(path)
-        if not path.is_absolute():
-            path = (self.root_dir / path).resolve()
-        return path
+        return abs_path(path, self.root_dir)
 
     def to_dict(self):
         """Convert the configuration to a dictionary"""

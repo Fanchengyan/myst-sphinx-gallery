@@ -8,9 +8,201 @@ import base64
 import io
 import re
 from pathlib import Path
+from typing import Literal
 
 import nbformat
-from PIL import Image
+from PIL import Image, ImageOps
+
+from .io_tools import ensure_dir_exists
+
+OperationMap = {
+    "contain": ImageOps.contain,
+    "cover": ImageOps.cover,
+    "fit": ImageOps.fit,
+    "pad": ImageOps.pad,
+}
+SaveKwargs = {
+    "format": "WebP",
+    "lossless": False,
+    "compression": 6,
+}
+
+
+class Thumbnail:
+    """A class to manage the thumbnail image"""
+
+    _path: Path
+    _image: Image.Image
+
+    def __init__(
+        self,
+        image: Path | str | Image.Image,
+        output_dir: Path | str,
+        ref_size: tuple[int, int] | int = (320, 224),
+        operation: Literal["thumbnail", "contain", "cover", "fit", "pad"] = "pad",
+        operation_kwargs: dict[str, int] = {},
+        save_kwargs: dict[str, int] = {},
+    ) -> None:
+        """Initialize the Thumbnail object.
+
+        path : Path | str | Image.Image
+            The path to the thumbnail image, or the PIL image object.
+        output_dir : Path
+            The directory to save the thumbnail image.
+        ref_size : tuple[int, int]
+            the reference size of the thumbnail image for output.
+        operation : str
+            The operation to perform on the image. See the Pillow documentation for more information: `<https://pillow.readthedocs.io/en/stable/handbook/tutorial.html#relative-resizing>`_
+        operation_kwargs : dict
+            The keyword arguments for the operation.
+        save_kwargs : dict
+            The keyword arguments for the save method.
+        """
+        if isinstance(image, Image.Image):
+            self._image = image
+            if hasattr(image, "path"):
+                self._path = Path(image.path)
+            else:
+                self._path = Path("no_image.png")
+        elif isinstance(image, (str, Path)):
+            self._path = Path(image)
+            self._image = Image.open(image)
+        else:
+            raise ValueError("image must be a path or PIL Image object")
+
+        self.operation = operation
+        self.operation_kwargs = operation_kwargs
+        self._output_dir = Path(output_dir)
+
+        self._ref_size = self._format_size(ref_size)
+        self._save_kwargs = self._format_save_kwargs(save_kwargs)
+
+    def __str__(self) -> str:
+        return f"Thumbnail(path={self.path})"
+
+    def __repr__(self) -> str:
+        return f"Thumbnail(path={self.path})"
+
+    def _format_save_kwargs(self, save_kwargs: dict[str, int]) -> dict[str, int]:
+        """Format the save keyword arguments."""
+        if not isinstance(save_kwargs, dict):
+            raise ValueError("save_kwargs must be a dictionary")
+        kwargs = SaveKwargs.copy()
+        if self.image.n_frames > 1:
+            kwargs.update(
+                {
+                    "quality": 15,  # reduce the quality of the gif for smaller size
+                    "save_all": True,
+                    "duration": self.image.info["duration"],
+                    "loop": 0,
+                }
+            )
+        else:
+            kwargs.update({"quality": 80})
+        if self.operation == "pad":
+            kwargs.update({"color": "00000000"})  # transparent background
+
+        kwargs.update(save_kwargs)
+        return kwargs
+
+    def _format_size(self, size: tuple[int, int] | int) -> tuple[int, int]:
+        """Format the size of the thumbnail image to a tuple of length 2."""
+        if isinstance(size, int):
+            return size, size
+        elif isinstance(size, tuple):
+            if len(size) != 2:
+                raise ValueError("size must be a tuple of length 2")
+            return size
+        else:
+            try:
+                size = tuple(size)
+                if len(size) != 2:
+                    raise ValueError("size must be a tuple of length 2")
+                return size
+            except Exception:
+                raise ValueError("size must be a tuple of length 2")
+
+    @property
+    def path(self) -> Path:
+        """The path to the thumbnail image."""
+        return self._path
+
+    @property
+    def output_dir(self) -> Path:
+        """The directory to save the thumbnail image."""
+        return self._output_dir
+
+    @property
+    def auto_output_path(self) -> Path:
+        """Automatically generated output path for the thumbnail image."""
+        out_file = self.output_dir / self.path.name
+        return out_file.with_suffix(".thumbnail.webp")
+
+    @property
+    def image(self) -> Image.Image:
+        """The thumbnail image."""
+        return self._image
+
+    @property
+    def ref_size(self) -> tuple[int, int]:
+        """The reference size of the thumbnail image."""
+        return self._ref_size
+
+    @property
+    def save_kwargs(self) -> dict[str, int]:
+        """The keyword arguments for the save method."""
+        return self._save_kwargs
+
+    def generate_thumbnail(self) -> Image.Image:
+        """Generate the thumbnail image based on the operation."""
+        if self.operation == "thumbnail":
+            thumbnail = self.image.copy()
+            thumbnail.thumbnail(self.ref_size)
+            thumbnail.info.clear()
+        else:
+            operate = OperationMap[self.operation]
+            image = self.image
+            if self.operation == "pad":
+                image = image.convert("RGBA")
+            thumbnail = operate(image, self.ref_size, **self.operation_kwargs)
+
+        return thumbnail
+
+    def save_thumbnail(self, out_path: Path | None = None) -> Path:
+        """Save the thumbnail image to the output directory.
+
+        Parameters
+        ----------
+        out_path : Path
+            The path to save the thumbnail image. If None, the image will be
+            saved with the same name as the original image.
+
+        Returns
+        -------
+        out_path : Path
+            The path to the saved thumbnail image.
+        """
+        if out_path is None:
+            out_path = self.auto_output_path
+        else:
+            out_path = Path(out_path)
+        ensure_dir_exists(out_path.parent)
+
+        if self.image.n_frames > 1:
+            frames = []
+            for frame in range(self.image.n_frames):
+                self.image.seek(frame)
+                frames.append(self.generate_thumbnail())
+
+            frames[0].save(
+                out_path,
+                append_images=frames[1:],
+                **self.save_kwargs,
+            )
+        else:
+            thumbnail = self.generate_thumbnail()
+            thumbnail.save(out_path, **self.save_kwargs)
+        return out_path
 
 
 class DocImages:
@@ -159,7 +351,7 @@ class CellImages:
             The index of the image to save.
         """
         output_file = Path(output_file)
-        _ensure_dir_exists(output_file.parent)
+        ensure_dir_exists(output_file.parent)
         img = self.images[index]
         img.save(output_file)
 
@@ -257,12 +449,6 @@ def parse_rst_images(rst_content: str) -> DocImages:
         images.append((strip_str(url), strip_str(alt)))
 
     return DocImages(images)
-
-
-def _ensure_dir_exists(directory: Path):
-    """Ensure that the directory exists."""
-    if not directory.exists():
-        directory.mkdir(parents=True)
 
 
 def strip_str(s: str) -> str:

@@ -62,7 +62,7 @@ testing = [
   # "pytest-param-files~=0.3.3",
 
 ]
-dev = ["pre-commit",  
+dev = ["pre-commit",
   "coverage",
   "pytest",
   "pytest-cov",
@@ -107,4 +107,5 @@ filterwarnings = [
 markers = [
   "add_conf: Configuration file.",
   "add_rst: Add rst file to src.",
+  "slow: marks tests as slow",
 ]
