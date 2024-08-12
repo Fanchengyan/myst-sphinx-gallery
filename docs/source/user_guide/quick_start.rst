@@ -27,19 +27,20 @@ To use MyST Sphinx Gallery, you need to add the following code to the Sphinx ``c
 
     from myst_sphinx_gallery import GalleryConfig, generate_gallery
 
-    myst_sphinx_gallery_config = GalleryConfig(
-        examples_dirs="../../examples",
-        gallery_dirs="auto_examples",
-        root_dir=Path(__file__).parent,
-        notebook_thumbnail_strategy="code",
+    generate_gallery(
+        GalleryConfig(
+            examples_dirs="../../examples",
+            gallery_dirs="auto_examples",
+            root_dir=Path(__file__).parent,
+            notebook_thumbnail_strategy="code",
+        )
     )
-    generate_gallery(myst_sphinx_gallery_config)
 
 You can configure all options by specifying the parameters for :class:`GalleryConfig <myst_sphinx_gallery.config.GalleryConfig>`.
 
 .. tip::
 
-    You can **generate multiple galleries** by proper configuration in the ``conf.py`` file. For more details, please refer to the :ref:`multi_galleries`.
+    You can generate **multiple galleries** by proper configuration in the ``conf.py`` file. For more details, please refer to the :ref:`multi_galleries`.
 
 
 .. important::
@@ -57,9 +58,9 @@ You can configure all options by specifying the parameters for :class:`GalleryCo
         ]
 
         source_suffix = {
-                ".rst": "restructuredtext",
-                ".md": "myst-nb",
-                ".myst": "myst-nb",
+            ".rst": "restructuredtext",
+            ".md": "myst-nb",
+            ".myst": "myst-nb",
         }
 
     For more information, please refer to the documentation of `MyST <https://myst-parser.readthedocs.io/en/latest/>`_ and `MyST-NB  <https://myst-nb.readthedocs.io/en/latest/>`_.
@@ -84,15 +85,17 @@ MyST Sphinx Gallery using files/directories order to determine the order of the 
 
 More details can be found in the :ref:`example_order`.
 
-Thumbnail strategy for files
-----------------------------
+Select the thumbnail for an example file
+----------------------------------------
 
+- **one image** - If there only one image in an example file, no additional configuration is needed, and that image will be used as the gallery thumbnail.
 
-If there are multiple figures in an example file, you can specify the strategy to determine which thumbnail will be used for the gallery. The following strategies are supported:
+- **multiple images** - If there are multiple figures in an example file, you can specify the strategy to determine which thumbnail will be used for the gallery. The following strategies are supported:
 
-1. **alt**: If the ``alt`` attribute of an image/figure is set to ``gallery_thumbnail``, that image/figure will be used as the gallery thumbnail for this file.
-2. **first/last**: If there are multiple images that can be used as the gallery thumbnail, the ``first/last`` image will be selected. You can specify the strategy by setting the ``thumbnail_strategy`` for :class:`~myst_sphinx_gallery.config.GalleryConfig`.
-3. **code/markdown**: For Jupyter notebook files, both ``markdown`` and ``code`` cells can contain images. You can specify the strategy by setting the ``notebook_thumbnail_strategy`` for :class:`~myst_sphinx_gallery.config.GalleryConfig`. The default value is "code".
-4. **default thumbnail**: If no image/figure is found, the default thumbnail will be used.
+  1. **alt** - If the alt attribute of an image/figure is set to gallery_thumbnail, that image/figure will be used as the gallery thumbnail for this file.
+  2. **first/last** - If there are multiple images that can be used as the gallery thumbnail, the first/last image will be selected. You can specify the strategy by setting the thumbnail_strategy in the configuration file. The default value is first.
+  3. **code/markdown** - For Jupyter notebook files, both markdown and code cells can contain images. You can specify the strategy by setting the notebook_thumbnail_strategy in the configuration file. The default value is code.
+
+- **no image** - If no image/figure is found, the default thumbnail will be used.
 
 More details can be found in the :ref:`thumbnail_strategy`.

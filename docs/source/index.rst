@@ -2,9 +2,28 @@
 MyST Sphinx Gallery
 ===================
 
+.. image:: https://img.shields.io/pypi/v/myst-sphinx-gallery
+   :target: https://pypi.org/project/myst-sphinx-gallery/
+   :alt: PyPI
+
+.. image:: https://readthedocs.org/projects/myst-sphinx-gallery/badge/?version=latest
+   :target: https://myst-sphinx-gallery.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+
+.. image:: https://codecov.io/gh/Fanchengyan/myst-sphinx-gallery/graph/badge.svg?token=IHXYE1K1G9
+   :target: https://codecov.io/gh/Fanchengyan/myst-sphinx-gallery
+   :alt: Code Coverage
+
+Introduction
+------------
+
 **MyST Sphinx Gallery** is a Sphinx extension that allows you to build galleries of examples from jupyter notebooks (``.ipynb``), markdown (``.md``) or reStructuredText (``.rst``) files. It works with ``MyST`` ecosystem, including `MyST-parser <https://myst-parser.readthedocs.io/en/latest/>`_ and `MyST-NB <https://myst-nb.readthedocs.io/en/latest/>`_, to render markdown or jupyter notebooks in Sphinx documentation.
 
+Highlight Features
+------------------
 
+- **Convenient to use** - You can easily generate a gallery of examples from your Jupyter Notebooks, Markdown, or reStructuredText files. It works with ``MyST`` ecosystem, including `MyST-parser <https://myst-parser.readthedocs.io/en/latest/>`_ and `MyST-NB <https://myst-nb.readthedocs.io/en/latest/>`_, to render markdown or jupyter notebooks in Sphinx documentation.
+- **Customizable** - You can customize the gallery configuration, such as the strategy to select the thumbnail, the gallery layout, and the gallery directory.
 
 .. toctree::
    :maxdepth: 2
@@ -12,10 +31,14 @@ MyST Sphinx Gallery
    :hidden:
 
    user_guide/index
-   auto_examples/index
-   auto_examples2/index
+   examples
    api/index
    contributing/index
+
+
+
+Navigation
+----------
 
 .. grid:: 1 2 2 2
    :gutter: 5

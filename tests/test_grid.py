@@ -61,13 +61,11 @@ class TestGrid:
 
     def test_add_option(self):
         grid = Grid()
-        print(grid.pattern)
         grid.add_option("custom_option", 5)
         assert ":custom_option: 5" in grid.pattern
 
     def test_add_item(self):
         grid = Grid()
-        print(grid.pattern)
         grid.add_item("item1")
         assert grid.pattern == "\n\n.. grid:: 2 3 3 4\n\nitem1\n"
         grid.add_item("item2")
@@ -94,13 +92,11 @@ class TestGridItemCard:
 
     def test_add_option(self):
         card = GridItemCard()
-        print(card.pattern)
         card.add_option("custom_option", 5)
         assert ":custom_option: 5" in card.pattern
 
     def test_add_item(self):
         card = GridItemCard()
-        print(card.pattern)
         card.add_item("item1")
         assert card.pattern == grid_item_card + "\n        item1\n"
         card.add_item("item2")

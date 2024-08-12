@@ -4,7 +4,6 @@ A module for managing the gallery of examples.
 
 from __future__ import annotations
 
-import shutil
 import warnings
 from pathlib import Path
 from typing import Literal
@@ -23,11 +22,14 @@ from .images import (
     parse_md_images,
     parse_rst_images,
 )
-from .io_tools import abs_path, ensure_dir_exists, safe_remove_file
+from .io_tools import ensure_dir_exists, safe_remove_file
 
 
-def generate_gallery(gallery_config: GalleryConfig):
+def generate_gallery(gallery_config: GalleryConfig | dict):
     """Generate the gallery from the examples directory."""
+    if isinstance(gallery_config, dict):
+        gallery_config = GalleryConfig(**gallery_config)
+
     n_gallery = len(gallery_config.gallery_dirs)
     for i in range(n_gallery):
         gallery = GalleryGenerator(
@@ -162,7 +164,7 @@ class GalleryGenerator:
             )
             section.convert()
             self.add_toc_item(section.index_file)
-            title = get_rst_title(section.index_file)
+            title = get_rst_title(section.header_file)
             self.add_section_item(title, section.section_grid)
         self.convert_to_index_file()
 
@@ -466,7 +468,10 @@ class ExampleConverter:
         self._gallery_thumb = self.thumb_file_rel(self.no_image_thumb)
         if self.no_image_thumb.exists():
             return
-        thumbnail = Thumbnail(self.default_thumb, self.thumb_dir)
+
+        thumbnail = Thumbnail(
+            self.default_thumb, self.thumb_dir, **self.config.thumbnail_config.to_dict()
+        )
         thumbnail.save_thumbnail(self.no_image_thumb)
 
     def _parse_doc_thumb(self, images: DocImages):
@@ -485,7 +490,9 @@ class ExampleConverter:
             else:
                 gallery_thumb = images[self.thumb_idx]
             gallery_thumb = self.config.abs_path(gallery_thumb)
-            thumbnail = Thumbnail(gallery_thumb, self.thumb_dir)
+            thumbnail = Thumbnail(
+                gallery_thumb, self.thumb_dir, **self.config.thumbnail_config.to_dict()
+            )
             gallery_thumb = thumbnail.save_thumbnail()
             self._gallery_thumb = self.thumb_file_rel(gallery_thumb)
         else:
@@ -505,7 +512,11 @@ class ExampleConverter:
         exists = True
         if len(images) > 0:
             gallery_thumb = self.thumb_dir / f"{self.example_file.stem}.webp"
-            thumbnail = Thumbnail(images.images[self.thumb_idx], self.thumb_dir)
+            thumbnail = Thumbnail(
+                images.images[self.thumb_idx],
+                self.thumb_dir,
+                **self.config.thumbnail_config.to_dict(),
+            )
             thumbnail.save_thumbnail(gallery_thumb)
             self._gallery_thumb = self.thumb_file_rel(gallery_thumb)
         else:
@@ -635,3 +646,6 @@ def remove_num_prefix(header_file: Path) -> tuple[str, str]:
 def default_thumbnail():
     """Return the path to the default thumbnail image."""
     return Path(__file__).parent / "_static" / "no_image.png"
+
+
+####### following function not working now #######

@@ -24,8 +24,8 @@ specific to contributing to MyST-Sphinx-Gallery.
 
 .. _checkout-source:
 
-Get Latest Source
------------------
+Get Latest Source Code
+----------------------
 
 You can get the latest development source from our `Github repository
 <https://github.com/Fanchengyan/myst-sphinx-gallery>`_. Fork the repository and clone it to your local machine:

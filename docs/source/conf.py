@@ -13,25 +13,60 @@ author = "Fan Chengyan (Fancy)"
 # -- MyST Sphinx Gallery Configuration ---------------------------------------
 from pathlib import Path
 
-from myst_sphinx_gallery import GalleryConfig, __version__, generate_gallery
-
-myst_sphinx_gallery_config = GalleryConfig(
-    examples_dirs="../../examples",
-    gallery_dirs="auto_examples",
-    root_dir=Path(__file__).parent,
-    notebook_thumbnail_strategy="code",
-    thumbnail_strategy="last",
+from myst_sphinx_gallery import (
+    GalleryConfig,
+    Grid,
+    GridItemCard,
+    ThumbnailConfig,
+    __version__,
+    generate_gallery,
 )
-generate_gallery(myst_sphinx_gallery_config)
 
-myst_sphinx_gallery_config2 = GalleryConfig(
-    examples_dirs="../../examples2",
-    gallery_dirs="auto_examples2",
-    root_dir=Path(__file__).parent,
-    notebook_thumbnail_strategy="markdown",
-    thumbnail_strategy="first",
+myst_sphinx_gallery_config = {
+    "examples_dirs": "../../examples1",
+    "gallery_dirs": "auto_examples1",
+    "root_dir": Path(__file__).parent,
+    "notebook_thumbnail_strategy": "code",
+    "thumbnail_strategy": "last",
+}
+
+generate_gallery(
+    GalleryConfig(
+        examples_dirs="../../examples2",
+        gallery_dirs="auto_examples2",
+        root_dir=Path(__file__).parent,
+        notebook_thumbnail_strategy="markdown",
+        thumbnail_strategy="first",
+    )
 )
-generate_gallery(myst_sphinx_gallery_config2)
+
+myst_gallery_grid = Grid(
+    grid_option=(1, 2, 2, 2),
+    margin=3,
+    padding=2,
+)
+myst_gallery_grid.add_option("class-container", "myst-gallery-grid")
+
+myst_gallery_grid_item = GridItemCard(columns=4, margin=4, padding=4)
+myst_gallery_grid_item.add_option("class-item", "myst-gallery-grid-item")
+
+generate_gallery(
+    GalleryConfig(
+        examples_dirs="../../examples3",
+        gallery_dirs="auto_examples3",
+        root_dir=Path(__file__).parent,
+        notebook_thumbnail_strategy="markdown",
+        thumbnail_strategy="first",
+        thumbnail_config=ThumbnailConfig(
+            ref_size=(320, 320),
+            operation="pad",
+            operation_kwargs={"color": "black"},
+            save_kwargs={"quality": 90},
+        ),
+        grid=myst_gallery_grid,
+        grid_item_card=myst_gallery_grid_item,
+    )
+)
 
 release = f"v{__version__}"
 
@@ -48,7 +83,7 @@ extensions = [
     "sphinx_design",
     "sphinx_togglebutton",
     "myst_nb",
-    # "myst_sphinx_gallery.gen_gallery",
+    "myst_sphinx_gallery",
 ]
 
 source_suffix = {

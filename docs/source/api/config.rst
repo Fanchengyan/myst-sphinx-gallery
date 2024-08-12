@@ -13,3 +13,28 @@ GalleryConfig
    :inherited-members:
    :show-inheritance:
    :undoc-members:
+
+
+TocTree
+-------
+
+.. autoclass:: myst_sphinx_gallery.TocTree
+   :inherited-members:
+   :show-inheritance:
+   :undoc-members:
+
+Grid
+----
+
+.. autoclass:: myst_sphinx_gallery.Grid
+   :inherited-members:
+   :show-inheritance:
+   :undoc-members:
+
+GridItemCard
+------------
+
+.. autoclass:: myst_sphinx_gallery.GridItemCard
+   :inherited-members:
+   :show-inheritance:
+   :undoc-members:
