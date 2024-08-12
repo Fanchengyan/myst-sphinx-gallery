@@ -42,19 +42,20 @@ To use MyST Sphinx Gallery, you need to add the following code to the Sphinx `co
 
 ```python
 from pathlib import Path
-
 from myst_sphinx_gallery import GalleryConfig, generate_gallery
 
-generate_gallery(GalleryConfig(
-    examples_dirs="../../examples",
-    gallery_dirs="auto_examples",
-    root_dir=Path(__file__).parent,
-    notebook_thumbnail_strategy="code",
-))
+generate_gallery(
+    GalleryConfig(
+        examples_dirs="../../examples",
+        gallery_dirs="auto_examples",
+        root_dir=Path(__file__).parent,
+        notebook_thumbnail_strategy="code",
+    )
+)
 ```
 
 >[!NOTE]
-> You can generate **multiple galleries** by proper configuration in the `conf.py` file. For more details, please refer to the [Multiple Galleries](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/multi_galleries.html).
+> You can generate **multiple galleries** by proper configuration in the `conf.py` file. For more details, please refer to the [Configure multiple galleries](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/multi_galleries.htmll#configure-multiple-galleries).
 
 ## Construct the examples folder
 

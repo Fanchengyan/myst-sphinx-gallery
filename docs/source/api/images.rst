@@ -9,6 +9,14 @@ This section contains the classes and functions to handle images in MyST Sphinx 
 Classes
 =======
 
+Thumbnail
+---------
+
+.. autoclass:: myst_sphinx_gallery.images.Thumbnail
+   :inherited-members:
+   :show-inheritance:
+   :undoc-members:
+
 DocImages
 ---------
 

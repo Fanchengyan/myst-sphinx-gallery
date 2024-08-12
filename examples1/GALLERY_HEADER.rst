@@ -1,15 +1,14 @@
-.. _gallery2_header:
+.. _gallery_header:
 
 ======================================
-Examples-2 : Select thumbnail strategy
+Examples 1 : Select thumbnail strategy
 ======================================
 
-This is the **second gallery example**. It is used to
+This is the **first gallery example**, which provides a comprehensive overview of
+how to select a thumbnail for one example file in the MyST Sphinx Gallery extension.
 
-- illustrate **multiple galleries**.
-- provide **additional illustrations** of the strategies of selecting thumbnail.
+Additional illustrations of the strategies of selecting thumbnail can be found in :ref:`gallery2_header`.
 
-the more comprehensive examples can be found in :ref:`gallery_header`.
 
 .. admonition:: conf.py
     :class: dropdown
@@ -25,10 +24,10 @@ the more comprehensive examples can be found in :ref:`gallery_header`.
 
         generate_gallery(
             GalleryConfig(
-            examples_dirs="../../examples2",
-            gallery_dirs="auto_examples2",
+            examples_dirs="../../examples1",
+            gallery_dirs="auto_examples1",
             root_dir=Path(__file__).parent,
-            notebook_thumbnail_strategy="markdown",
-            thumbnail_strategy="first",
+            notebook_thumbnail_strategy="code",
+            thumbnail_strategy="last",
             )
         )

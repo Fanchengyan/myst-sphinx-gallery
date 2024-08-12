@@ -27,13 +27,14 @@ To use MyST Sphinx Gallery, you need to add the following code to the Sphinx ``c
 
     from myst_sphinx_gallery import GalleryConfig, generate_gallery
 
-    myst_sphinx_gallery_config = GalleryConfig(
-        examples_dirs="../../examples",
-        gallery_dirs="auto_examples",
-        root_dir=Path(__file__).parent,
-        notebook_thumbnail_strategy="code",
+    generate_gallery(
+        GalleryConfig(
+            examples_dirs="../../examples",
+            gallery_dirs="auto_examples",
+            root_dir=Path(__file__).parent,
+            notebook_thumbnail_strategy="code",
+        )
     )
-    generate_gallery(myst_sphinx_gallery_config)
 
 You can configure all options by specifying the parameters for :class:`GalleryConfig <myst_sphinx_gallery.config.GalleryConfig>`.
 
@@ -57,9 +58,9 @@ You can configure all options by specifying the parameters for :class:`GalleryCo
         ]
 
         source_suffix = {
-                ".rst": "restructuredtext",
-                ".md": "myst-nb",
-                ".myst": "myst-nb",
+            ".rst": "restructuredtext",
+            ".md": "myst-nb",
+            ".myst": "myst-nb",
         }
 
     For more information, please refer to the documentation of `MyST <https://myst-parser.readthedocs.io/en/latest/>`_ and `MyST-NB  <https://myst-nb.readthedocs.io/en/latest/>`_.

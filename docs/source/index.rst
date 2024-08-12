@@ -31,10 +31,11 @@ Highlight Features
    :hidden:
 
    user_guide/index
-   auto_examples/index
-   auto_examples2/index
+   examples
    api/index
    contributing/index
+
+
 
 Navigation
 ----------

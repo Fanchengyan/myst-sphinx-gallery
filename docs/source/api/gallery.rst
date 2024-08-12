@@ -40,7 +40,7 @@ Functions
 generate_gallery
 ----------------
 
-.. autofunction:: myst_sphinx_gallery.gallery.generate_gallery
+.. autofunction:: myst_sphinx_gallery.generate_gallery
 
 
 write_index_file
