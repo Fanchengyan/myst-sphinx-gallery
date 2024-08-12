@@ -9,6 +9,31 @@ from .io_tools import abs_path
 
 
 @dataclass
+class ThumbnailConfig:
+    """Configuration to setup the :class:`~myst_sphinx_gallery.images.Thumbnail`
+    class. This class is used to specify the parameters to create a thumbnail
+    from an image.
+    """
+
+    #: the reference size of the thumbnail image for output.
+    ref_size: tuple[int, int] = (320, 224)
+
+    #: The operation to perform on the image. See the Pillow documentation for
+    #: more information: `<https://pillow.readthedocs.io/en/stable/handbook/tutorial.html#relative-resizing>`_
+    operation: Literal["thumbnail", "contain", "cover", "fit", "pad"] = "pad"
+
+    #: The keyword arguments to pass to the operation function.
+    operation_kwargs: dict[str, int] = field(default_factory=dict)
+
+    #: The operation to perform on the image to save the thumbnail.
+    save_kwargs: dict[str, int] = field(default_factory=dict)
+
+    def to_dict(self):
+        """Convert the configuration to a dictionary"""
+        return self.__dict__.copy()
+
+
+@dataclass
 class GalleryConfig:
     """Configurations for MyST Sphinx Gallery
 
@@ -34,18 +59,18 @@ class GalleryConfig:
     #:
     #: .. note::
     #:
-    #:    1. The paths is relative to the root directory.
+    #:    1. The paths are relative to the root directory :attr:`root_dir`.
     #:    2. If a list of paths is provided, the number of paths must match
-    #:       the number of paths in ``gallery_dirs``.
+    #:       the number of paths in :attr:`gallery_dirs`.
     examples_dirs: Path | str | list[Path | str]
 
     #: The directories where the gallery output will be saved.
     #:
     #: .. note::
     #:
-    #:    1. The paths is relative to the root directory.
+    #:    1. The paths are relative to the root directory :attr:`root_dir`.
     #:    2. If a list of paths is provided, the number of paths must match the
-    #:       number of paths in ``example_dirs``.
+    #:       number of paths in :attr:`examples_dirs`.
     gallery_dirs: Path | str | list[Path | str]
 
     #: The root directory for any relative paths in this configuration.
@@ -69,16 +94,19 @@ class GalleryConfig:
     #: If None, a default thumbnail image in this package will be used.
     default_thumbnail_file: Path | str | None = None
 
-    #: A instance of the TocTree class to create a table of content for the
-    #: gallery images. Currently, no additional options are supported.
+    #: The configuration for the thumbnail image.
+    thumbnail_config: ThumbnailConfig = field(default_factory=ThumbnailConfig)
+
+    #: A instance of :class:`~myst_sphinx_gallery.TocTree` class to create
+    #: a table of content for gallery. Currently, no additional options are supported.
     toc_tree: TocTree = field(default_factory=TocTree)
 
-    #: The grid configuration for the gallery images. You can customize the
-    #: grid layout using this configuration.
+    #: A instance of :class:`~myst_sphinx_gallery.Grid` class for gallery.
+    #: You can customize the grid layout using this configuration.
     grid: Grid = field(default_factory=Grid)
 
-    #: The grid item card configuration for the gallery images. You can customize
-    #: the grid item card using this configuration.
+    #: A instance of :class:`~myst_sphinx_gallery.GridItemCard` class for gallery.
+    #: You can customize he grid item card using this configuration.
     grid_item_card: GridItemCard = field(default_factory=GridItemCard)
 
     def __post_init__(self):

@@ -127,9 +127,7 @@ class Grid:
 
         .. note:: The new instance will only have the same options, but no items.
         """
-        pattern = f"\n\n.. grid:: {format_params(self.grid_option)}\n"
-        grid = Grid()
-        grid.pattern = pattern
+        grid = Grid(grid_option=self.grid_option)
         for option, value in self.options.items():
             grid.add_option(option, value)
 
