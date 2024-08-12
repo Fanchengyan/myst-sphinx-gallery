@@ -17,13 +17,13 @@ def cwd():
 
 @pytest.fixture
 def cell_nb_file(cwd):
-    return cwd.parent / "examples/code_markdown/plot_image_code.ipynb"
+    return cwd.parent / "examples1/code_markdown/plot_image_code.ipynb"
 
 
 @pytest.fixture
 def markdown_nb_file():
     cwd = Path(__file__).parent
-    nb_file = cwd.parent / "examples/00-alt/nb.ipynb"
+    nb_file = cwd.parent / "examples1/00-alt/nb.ipynb"
     return nb_file
 
 
