@@ -99,3 +99,12 @@ Select the thumbnail for an example file
 - **no image** - If no image/figure is found, the default thumbnail will be used.
 
 More details can be found in the :ref:`thumbnail_strategy`.
+
+Customize the layout and thumbnail
+----------------------------------
+
+You can customize the layout and thumbnail behaviors for the gallery using the MyST Sphinx Gallery extension. For more details, please refer to the section :ref:`custom`.
+
+.. tip::
+
+    The :ref:`gallery3_header` is an example gallery used to demonstrate the customization of the layout and thumbnail, providing an intuitive understanding of customizing behaviors.

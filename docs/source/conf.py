@@ -47,7 +47,7 @@ myst_gallery_grid = Grid(
 )
 myst_gallery_grid.add_option("class-container", "myst-gallery-grid")
 
-myst_gallery_grid_item = GridItemCard(columns=4, margin=4, padding=4)
+myst_gallery_grid_item = GridItemCard(columns=5, margin=3, padding=3)
 myst_gallery_grid_item.add_option("class-item", "myst-gallery-grid-item")
 
 generate_gallery(
@@ -56,11 +56,11 @@ generate_gallery(
         gallery_dirs="auto_examples3",
         root_dir=Path(__file__).parent,
         notebook_thumbnail_strategy="markdown",
-        thumbnail_strategy="first",
+        thumbnail_strategy="last",
         thumbnail_config=ThumbnailConfig(
             ref_size=(320, 320),
             operation="pad",
-            operation_kwargs={"color": "black"},
+            operation_kwargs={"color": "orange"},
             save_kwargs={"quality": 90},
         ),
         grid=myst_gallery_grid,
@@ -105,7 +105,7 @@ exclude_patterns = []
 
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
-html_css_files = ["custom.css"]
+html_css_files = ["css/custom.css", "css/gallery.css"]
 html_logo = "_static/logo/logo.svg"
 html_favicon = "_static/logo/logo-square.svg"
 html_theme_options = {

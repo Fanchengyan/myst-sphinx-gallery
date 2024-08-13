@@ -74,3 +74,12 @@ To generate the gallery, you need to create a well-structured examples folder. T
 
 
 More details can be found in the [Thumbnail Strategies](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/thumb.html).
+
+## Customize the layout and thumbnail
+
+
+You can customize the layout and thumbnail behaviors for the gallery using the MyST Sphinx Gallery extension. For more details, please refer to the section [Configuration for Generating Galleries
+](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/custom.html).
+
+> [!TIP]
+> The [Examples-3 : Costumizing Grid and Thumbnail](https://myst-sphinx-gallery.readthedocs.io/en/latest/auto_examples3/index.html) is an example gallery used to demonstrate the customization of the layout and thumbnail, providing an intuitive understanding of customizing behaviors.

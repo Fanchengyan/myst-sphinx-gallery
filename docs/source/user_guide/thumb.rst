@@ -7,12 +7,15 @@ Thumbnail Strategies
 Overview
 --------
 
-If there are multiple figures in an example file, you can specify the strategy to determine which thumbnail will be used for the gallery. The following strategies are supported:
+- **one image** - If there only one image in an example file, no additional configuration is needed, and that image will be used as the gallery thumbnail.
 
-1. **alt**: If the ``alt`` attribute of an image/figure is set to ``gallery_thumbnail``, that image/figure will be used as the gallery thumbnail for this file.
-2. **first/last**: If there are multiple images that can be used as the gallery thumbnail, the ``first/last`` image will be selected. You can specify the strategy by setting the ``thumbnail_strategy`` in the configuration file. The default value is ``first``.
-3. **code/markdown**: For Jupyter notebook files, both ``markdown`` and ``code`` cells can contain images. You can specify the strategy by setting the ``notebook_thumbnail_strategy`` in the configuration file. The default value is ``code``.
-4. **default thumbnail**: If no image/figure is found, the default thumbnail will be used.
+- **multiple images** - If there are multiple figures in an example file, you can specify the strategy to determine which thumbnail will be used for the gallery. The following strategies are supported:
+
+  1. **alt** - If the alt attribute of an image/figure is set to gallery_thumbnail, that image/figure will be used as the gallery thumbnail for this file.
+  2. **first/last** - If there are multiple images that can be used as the gallery thumbnail, the first/last image will be selected. You can specify the strategy by setting the thumbnail_strategy in the configuration file. The default value is first.
+  3. **code/markdown** - For Jupyter notebook files, both markdown and code cells can contain images. You can specify the strategy by setting the notebook_thumbnail_strategy in the configuration file. The default value is code.
+
+- **no image** - If no image/figure is found, the default thumbnail will be used.
 
 
 ``alt`` attribute
