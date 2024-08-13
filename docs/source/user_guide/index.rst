@@ -14,3 +14,4 @@ User Guide
    thumb
    cross_reference
    multi_galleries
+   custom

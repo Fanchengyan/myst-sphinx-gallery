@@ -14,6 +14,14 @@ GalleryConfig
    :show-inheritance:
    :undoc-members:
 
+ThumbnailConfig
+---------------
+
+.. autoclass:: myst_sphinx_gallery.ThumbnailConfig
+   :inherited-members:
+   :show-inheritance:
+   :undoc-members:
+
 
 TocTree
 -------
