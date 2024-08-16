@@ -17,4 +17,5 @@
 .myst-gallery-grid-item .sd-card-title .reference {
     color: var(--pst-color-warning);
     font-size: var(--pst-font-size-h5);
+    font-weight: lighter;
 }

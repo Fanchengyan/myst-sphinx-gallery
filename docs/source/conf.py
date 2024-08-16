@@ -52,8 +52,9 @@ generate_gallery(
             ref_size=(320, 320),
             operation="pad",
             operation_kwargs={"color": "orange"},
-            save_kwargs={"quality": 90},
+            quality_static=90,
         ),
+        target_prefix="myst_gallery_",
         grid=myst_gallery_grid,
         grid_item_card=myst_gallery_grid_item,
     )
