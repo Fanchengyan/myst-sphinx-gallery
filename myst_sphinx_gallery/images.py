@@ -40,6 +40,8 @@ class Thumbnail:
         output_dir: Path | str,
         ref_size: tuple[int, int] | int = (320, 224),
         operation: Literal["thumbnail", "contain", "cover", "fit", "pad"] = "pad",
+        quality_static: int = 80,
+        quality_animated: int = 15,
         operation_kwargs: dict[str, int] = {},
         save_kwargs: dict[str, int] = {},
     ) -> None:
@@ -73,6 +75,8 @@ class Thumbnail:
         self.operation = operation
         self.operation_kwargs = operation_kwargs
         self._output_dir = Path(output_dir)
+        self.quality_static = quality_static
+        self.quality_animated = quality_animated
 
         self._ref_size = self._format_size(ref_size)
         self._save_kwargs = self._format_save_kwargs(save_kwargs)
@@ -91,14 +95,14 @@ class Thumbnail:
         if self.image.n_frames > 1:
             kwargs.update(
                 {
-                    "quality": 15,  # reduce the quality of the gif for smaller size
+                    "quality": self.quality_animated,
                     "save_all": True,
                     "duration": self.image.info["duration"],
                     "loop": 0,
                 }
             )
         else:
-            kwargs.update({"quality": 80})
+            kwargs.update({"quality": self.quality_static})
         if self.operation == "pad":
             kwargs.update({"color": "00000000"})  # transparent background
 
