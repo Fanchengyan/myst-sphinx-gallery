@@ -109,3 +109,7 @@ markers = [
   "add_rst: Add rst file to src.",
   "slow: marks tests as slow",
 ]
+
+[tool.ruff.lint]
+select = ["E", "F"]
+ignore = ["F401", "E501"]
