@@ -68,7 +68,7 @@ class Grid:
 
     #: The number of columns in the grid for each breakpoint (xs sm md lg).
     #: Detailed explanation of the breakpoints can be found in the
-    #: `Bootstrap Breakpoint <https://getbootstrap.com/docs/5.0/layout/breakpoints/>`.
+    #: `Bootstrap Breakpoint <https://getbootstrap.com/docs/5.0/layout/breakpoints/>`_.
     grid_option: int | tuple[int] = (2, 3, 3, 4)
 
     #: Spacing between items.

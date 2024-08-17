@@ -1,0 +1,29 @@
+==================================
+What’s new in 0.2.1 (Aug 17, 2024)
+==================================
+
+Enhancements
+------------
+
+Thumbnails
+^^^^^^^^^^
+
+:class:`~myst_sphinx_gallery.ThumbnailConfig` now supports two new options:
+``quality_static`` and ``quality_animated``, to control the quality of those
+two types of thumbnails separately.
+
+
+Cross-referencing
+^^^^^^^^^^^^^^^^^
+
+- :class:`~myst_sphinx_gallery.GalleryConfig` now supports a new option:
+  ``target_prefix`` to customize the prefix of the target for the
+  cross-referencing.
+- ``GALLERY_HEADER.rst`` now will be added a target automatically based on the
+  folder name.
+
+Changes
+-------
+
+Code linter and formatter now change to `ruff <https://docs.astral.sh/ruff/>`_
+from `black <https://black.readthedocs.io/en/stable/>`_.

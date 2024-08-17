@@ -34,6 +34,7 @@ Highlight Features
    examples
    api/index
    contributing/index
+   changelog/index
 
 
 
