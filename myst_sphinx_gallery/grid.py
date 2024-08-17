@@ -50,7 +50,7 @@ class TocTree:
         item = file_path.relative_to(ref_dir).with_suffix("").as_posix()
         return item
 
-    def copy(self) -> "TocTree":
+    def copy(self) -> TocTree:
         """Return a new instance of the TocTree class.
 
         .. note:: The new instance will only have the same options, but no items.
@@ -68,7 +68,7 @@ class Grid:
 
     #: The number of columns in the grid for each breakpoint (xs sm md lg).
     #: Detailed explanation of the breakpoints can be found in the
-    #: `Bootstrap Breakpoint <https://getbootstrap.com/docs/5.0/layout/breakpoints/>`.
+    #: `Bootstrap Breakpoint <https://getbootstrap.com/docs/5.0/layout/breakpoints/>`_.
     grid_option: int | tuple[int] = (2, 3, 3, 4)
 
     #: Spacing between items.
@@ -113,7 +113,7 @@ class Grid:
         self.options[option] = value
         self.pattern += f"    :{option}: {format_params(value)}\n"
 
-    def add_item(self, item: "GridItemCard" | str):
+    def add_item(self, item: GridItemCard | str):
         """Add an item to the grid pattern."""
         if self._no_items:
             # add two new lines before the first item
@@ -122,7 +122,7 @@ class Grid:
         else:
             self.pattern += f"{item}\n"
 
-    def copy(self) -> "Grid":
+    def copy(self) -> Grid:
         """Return a new instance of Grid with same options.
 
         .. note:: The new instance will only have the same options, but no items.
@@ -185,7 +185,7 @@ class GridItemCard:
         """Format the grid item card pattern with the target reference and image path."""
         return self.pattern.format(target_ref=target_ref, img_path=img_path)
 
-    def copy(self) -> "GridItemCard":
+    def copy(self) -> GridItemCard:
         """Return a new instance of GridItemCard with same options.
 
         .. note:: The new instance will only have the same options, but no items.

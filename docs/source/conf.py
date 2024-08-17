@@ -1,16 +1,7 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
+# -- Gallery Configuration ---------------------------------------------------
 
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
-project = "MyST Sphinx Gallery"
-copyright = "2024, Fan Chengyan (Fancy)"
-author = "Fan Chengyan (Fancy)"
-
-# -- MyST Sphinx Gallery Configuration ---------------------------------------
+import os
+import sys
 from pathlib import Path
 
 from myst_sphinx_gallery import (
@@ -61,13 +52,25 @@ generate_gallery(
             ref_size=(320, 320),
             operation="pad",
             operation_kwargs={"color": "orange"},
-            save_kwargs={"quality": 90},
+            quality_static=90,
         ),
+        target_prefix="myst_gallery_",
         grid=myst_gallery_grid,
         grid_item_card=myst_gallery_grid_item,
     )
 )
 
+# Configuration file for the Sphinx documentation builder.
+#
+# For the full list of built-in configuration values, see the documentation:
+# https://www.sphinx-doc.org/en/master/usage/configuration.html
+
+# -- Project information -----------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+
+project = "MyST Sphinx Gallery"
+copyright = "2024, Fan Chengyan (Fancy)"
+author = "Fan Chengyan (Fancy)"
 release = f"v{__version__}"
 
 # -- General configuration ---------------------------------------------------
@@ -163,8 +166,5 @@ intersphinx_mapping = {
 
 
 # -- myst_sphinx_gallery package ----------------------------------------------------------
-import os
-import sys
-
-# Location of Sphinx files
+# Location of MyST Sphinx Gallery files
 sys.path.insert(0, os.path.abspath("./../.."))

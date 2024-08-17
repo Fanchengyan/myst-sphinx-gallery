@@ -9,9 +9,9 @@ User Guide
    :caption: Contents:
 
    quick_start
+   multi_galleries
    example_structure
    order
    thumb
    cross_reference
-   multi_galleries
    custom

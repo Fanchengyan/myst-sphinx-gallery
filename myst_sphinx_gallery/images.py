@@ -40,8 +40,10 @@ class Thumbnail:
         output_dir: Path | str,
         ref_size: tuple[int, int] | int = (320, 224),
         operation: Literal["thumbnail", "contain", "cover", "fit", "pad"] = "pad",
-        operation_kwargs: dict[str, int] = {},
-        save_kwargs: dict[str, int] = {},
+        quality_static: int = 80,
+        quality_animated: int = 15,
+        operation_kwargs: dict[str, int] | None = None,
+        save_kwargs: dict[str, int] | None = None,
     ) -> None:
         """Initialize the Thumbnail object.
 
@@ -58,6 +60,10 @@ class Thumbnail:
         save_kwargs : dict
             The keyword arguments for the save method.
         """
+        if operation_kwargs is None:
+            operation_kwargs = {}
+        if save_kwargs is None:
+            save_kwargs = {}
         if isinstance(image, Image.Image):
             self._image = image
             if hasattr(image, "path"):
@@ -73,6 +79,8 @@ class Thumbnail:
         self.operation = operation
         self.operation_kwargs = operation_kwargs
         self._output_dir = Path(output_dir)
+        self.quality_static = quality_static
+        self.quality_animated = quality_animated
 
         self._ref_size = self._format_size(ref_size)
         self._save_kwargs = self._format_save_kwargs(save_kwargs)
@@ -91,14 +99,14 @@ class Thumbnail:
         if self.image.n_frames > 1:
             kwargs.update(
                 {
-                    "quality": 15,  # reduce the quality of the gif for smaller size
+                    "quality": self.quality_animated,
                     "save_all": True,
                     "duration": self.image.info["duration"],
                     "loop": 0,
                 }
             )
         else:
-            kwargs.update({"quality": 80})
+            kwargs.update({"quality": self.quality_static})
         if self.operation == "pad":
             kwargs.update({"color": "00000000"})  # transparent background
 
@@ -119,8 +127,9 @@ class Thumbnail:
                 if len(size) != 2:
                     raise ValueError("size must be a tuple of length 2")
                 return size
-            except Exception:
-                raise ValueError("size must be a tuple of length 2")
+            except Exception as e:
+                if e is TypeError:
+                    raise ValueError("size must be a tuple of length 2") from e
 
     @property
     def path(self) -> Path:
@@ -182,10 +191,7 @@ class Thumbnail:
         out_path : Path
             The path to the saved thumbnail image.
         """
-        if out_path is None:
-            out_path = self.auto_output_path
-        else:
-            out_path = Path(out_path)
+        out_path = self.auto_output_path if out_path is None else Path(out_path)
         ensure_dir_exists(out_path.parent)
 
         if self.image.n_frames > 1:
@@ -231,7 +237,7 @@ class DocImages:
     def __repr__(self) -> str:
         return f"DocImages(images={len(self.images)})"
 
-    def __add__(self, other: "DocImages") -> "DocImages":
+    def __add__(self, other: DocImages) -> DocImages:
         if isinstance(other, DocImages):
             return DocImages(self.images + other.images)
         else:
@@ -297,7 +303,7 @@ class CellImages:
 
     def _extract_images(self):
         """Extract images from code cell outputs in a notebook."""
-        with open(self.notebook_file, "r", encoding="utf-8") as f:
+        with open(self.notebook_file, encoding="utf-8") as f:
             notebook = nbformat.read(f, as_version=4)
 
         images = []
@@ -403,7 +409,7 @@ def parse_md_images(markdown_content: str) -> DocImages:
 def load_nb_markdown(nb_file: Path) -> str:
     """Load the markdown content from a Jupyter notebook file."""
 
-    with open(nb_file, "r", encoding="utf-8") as f:
+    with open(nb_file, encoding="utf-8") as f:
         notebook = nbformat.read(f, as_version=4)
 
     markdown_cells = []

@@ -93,7 +93,9 @@ class GalleryGenerator:
                 continue
             folders.append(item)
         if len(folders) == 0:
-            warnings.warn(f"No valid subfolders found in {self.examples_dir}")
+            warnings.warn(
+                f"No valid subfolders found in {self.examples_dir}", stacklevel=1
+            )
         return sorted(folders)
 
     @property
@@ -110,6 +112,12 @@ class GalleryGenerator:
     def index_file(self) -> Path:
         """The path to the output gallery index file."""
         return self.gallery_dir / "index.rst"
+
+    @property
+    def target_str(self) -> str:
+        """the target string in the gallery file used to link to the example file."""
+        target_ref = f"{self.config.target_prefix}{self.index_file.parent.stem}".lower()
+        return f".. _{target_ref}:"
 
     @property
     def toc(self) -> str:
@@ -150,7 +158,7 @@ class GalleryGenerator:
     def convert_to_index_file(self):
         """Convert the gallery header file."""
         safe_remove_file(self.index_file)
-        write_index_file(self.header_file, self.index_file, self.toc)
+        write_index_file(self.header_file, self.index_file, self.toc, self.target_str)
         write_index_file(self.header_file, self.index_file, self.sections)
 
     def convert(self):
@@ -243,6 +251,12 @@ class SectionGenerator:
         return self._index_file
 
     @property
+    def target_str(self) -> str:
+        """the target string in the gallery file used to link to the example file."""
+        target_ref = f"{self.config.target_prefix}{self.index_file.parent.stem}".lower()
+        return f".. _{target_ref}:"
+
+    @property
     def example_files(self) -> list[Path]:
         """path to the example files in a same subfolder."""
         return self._example_files
@@ -285,7 +299,7 @@ class SectionGenerator:
         which contains toc and grid cards for the gallery section.
         """
         safe_remove_file(self.index_file)
-        write_index_file(self.header_file, self.index_file, self.toc)
+        write_index_file(self.header_file, self.index_file, self.toc, self.target_str)
         write_index_file(self.header_file, self.index_file, self.section_grid)
 
     def convert(self):
@@ -416,7 +430,7 @@ class ExampleConverter:
     @property
     def target_ref(self) -> str:
         """the target reference for the example file."""
-        return f"example_{self.example_file.stem}"
+        return f"{self.config.target_prefix}{self.gallery_file.stem}".lower()
 
     @property
     def gallery_thumb(self) -> Path:
@@ -460,7 +474,7 @@ class ExampleConverter:
         """Load the content of the example file."""
         if self.file_type == "notebook":
             return load_nb_markdown(self.example_file)
-        with open(self.example_file, "r", encoding="utf-8") as f:
+        with open(self.example_file, encoding="utf-8") as f:
             return f.read()
 
     def _use_default_thumbnail(self):
@@ -550,7 +564,7 @@ class ExampleConverter:
 
     def _convert_notebook_file(self):
         """Convert a notebook to a standardized example file."""
-        with open(self.example_file, "r", encoding="utf-8") as f:
+        with open(self.example_file, encoding="utf-8") as f:
             notebook = nbformat.read(f, as_version=4)
 
         # Add a reference to the notebook in the notebook
@@ -563,7 +577,7 @@ class ExampleConverter:
 
     def _convert_text_file(self):
         """Convert a text file (md, rst) to a standardized example file."""
-        with open(self.example_file, "r", encoding="utf-8") as f:
+        with open(self.example_file, encoding="utf-8") as f:
             content = f.read()
 
         # Add a reference to the markdown/rst file
@@ -586,6 +600,7 @@ def write_index_file(
     header_file: Path,
     index_file: Path,
     append_str: str,
+    prepend_str: str = "",
 ):
     """Write/Append string into a gallery header file
 
@@ -602,8 +617,8 @@ def write_index_file(
     if not index_file.exists():
         # copy and append the header file if not exists
         with open(index_file, "w", encoding="utf-8") as dst:
-            with open(header_file, "r", encoding="utf-8") as src:
-                content = src.read() + append_str
+            with open(header_file, encoding="utf-8") as src:
+                content = f"{prepend_str}\n\n{src.read()}\n{append_str}"
             dst.write(content)
     else:
         # only append the string if the file exists
@@ -613,7 +628,7 @@ def write_index_file(
 
 def get_rst_title(file_path: Path) -> str | None:
     """Get the title of a reStructuredText file."""
-    with open(file_path, "r", encoding="utf-8") as file:
+    with open(file_path, encoding="utf-8") as file:
         content = file.read()
 
     doctree = publish_doctree(content)
@@ -646,6 +661,3 @@ def remove_num_prefix(header_file: Path) -> tuple[str, str]:
 def default_thumbnail():
     """Return the path to the default thumbnail image."""
     return Path(__file__).parent / "_static" / "no_image.png"
-
-
-####### following function not working now #######

@@ -5,18 +5,26 @@
 Customizing Layout and Thumbnail
 ================================
 
-This page demonstrates how to customize the grid layout and thumbnail behaviors for the gallery using the MyST Sphinx Gallery extension.
+This page demonstrates how to customize the grid layout and thumbnail behaviors
+for the gallery using the MyST Sphinx Gallery extension.
 
 .. tip::
 
-    The :ref:`gallery3_header` is an example gallery used to demonstrate the customization of the layout and thumbnail using the MyST Sphinx Gallery extension, providing an intuitive understanding of customizing behaviors.
+    The :ref:`gallery3_header` is an example gallery used to demonstrate the
+    customization of the layout and thumbnail using the MyST Sphinx Gallery
+    extension, providing an intuitive understanding of customizing behaviors.
 
 Customizing thumbnail
 ---------------------
 
-By default, the thumbnail is resized to (320, 224) pixels with a ``pad`` operation and a white background color. You can customize the thumbnail behavior by providing a different configuration to the :class:`~myst_sphinx_gallery.ThumbnailConfig` class.
+By default, the thumbnail is resized to (320, 224) pixels with a ``pad``
+operation and a white background color. You can customize the thumbnail
+behavior by providing a different configuration to the
+:class:`~myst_sphinx_gallery.ThumbnailConfig` class.
 
-For example, you can change the thumbnail size to (320, 320) pixels with a ``pad`` operation and a orange background color by adding the following code in the ``conf.py`` file:
+For example, you can change the thumbnail size to (320, 320) pixels with a
+``pad`` operation and a orange background color by adding the following code in
+the ``conf.py`` file:
 
 .. code-block:: python
     :caption: conf.py
@@ -32,7 +40,7 @@ For example, you can change the thumbnail size to (320, 320) pixels with a ``pad
                 ref_size=(320, 320),
                 operation="pad",
                 operation_kwargs={"color": "orange"},
-                save_kwargs={"quality": 90},
+                quality_static=90,
             ),
             ..., # other configurations
         )
@@ -41,9 +49,21 @@ For example, you can change the thumbnail size to (320, 320) pixels with a ``pad
 Customizing layout
 ------------------
 
-You can customize the layout of the gallery by providing a different configuration to the :class:`~myst_sphinx_gallery.Grid` and :class:`~myst_sphinx_gallery.GridItemCard` classes.
+Customizing grid
+~~~~~~~~~~~~~~~~
 
-For example, you can change the grid option to ``(1,2,2,2)``, which means the colums of the gallery will be 2 colums for the wide screen and 1 column for the small screen. You can also change the padding or margin of the grid and grid cards by specifying the ``padding`` and ``margin`` parameters in the :class:`~myst_sphinx_gallery.Grid` and :class:`~myst_sphinx_gallery.GridItemCard` classes.
+The `sphinx-design <https://sphinx-design.readthedocs.io/en/latest/grids.html>`_
+package is used to create the grid layout of the gallery. MyST Sphinx Gallery
+provides two classes, :class:`~myst_sphinx_gallery.Grid` and
+:class:`~myst_sphinx_gallery.GridItemCard`, to customize the layout of the
+gallery.
+
+For example, you can change the grid option to ``(1,2,2,2)``, which means the
+colums of the gallery will be 2 colums for the wide screen and 1 column for the
+small screen. You can also change the padding or margin of the grid and grid
+cards by specifying the ``padding`` and ``margin`` parameters in the
+:class:`~myst_sphinx_gallery.Grid` and :class:`~myst_sphinx_gallery.GridItemCard`
+classes.
 
 Following code is an example of customizing the layout of the gallery:
 
@@ -69,11 +89,14 @@ Following code is an example of customizing the layout of the gallery:
 
 
 Customizing by CSS
-------------------
+~~~~~~~~~~~~~~~~~~
 
-The :class:`~myst_sphinx_gallery.Grid` and :class:`~myst_sphinx_gallery.GridItemCard` classes provide a ``add_option()`` method, which can be used to add custom CSS classes to the grid and grid cards.
+The :class:`~myst_sphinx_gallery.Grid` and
+:class:`~myst_sphinx_gallery.GridItemCard` classes provide a ``add_option()``
+method, which can be used to add custom CSS classes to the grid and grid cards.
 
-For example, you can add a custom class to the grid and grid cards by adding the following code in the ``conf.py`` file:
+For example, you can add a custom class to the grid and grid cards by adding the
+following code in the ``conf.py`` file:
 
 
 .. code-block:: python
@@ -103,7 +126,8 @@ For example, you can add a custom class to the grid and grid cards by adding the
     )
 
 
-Then, you can control the style of the grid and grid cards by specifying the custom parameters in the ``_static/css/gallery.css`` file.
+Then, you can control the style of the grid and grid cards by specifying the
+custom parameters in the ``_static/css/gallery.css`` file.
 
 .. tip::
 
@@ -146,4 +170,5 @@ Following code is an example of customizing the style of the grid and grid cards
     .myst-gallery-grid-item .sd-card-title .reference {
         color: var(--pst-color-warning);
         font-size: var(--pst-font-size-h5);
+        font-weight: lighter;
     }

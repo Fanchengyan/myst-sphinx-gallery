@@ -54,7 +54,7 @@ the grid layout and thumbnail behaviors when customizing the gallery using the M
                         ref_size=(320, 320),
                         operation="pad",
                         operation_kwargs={"color": "orange"},
-                        save_kwargs={"quality": 90},
+                        quality_static=90,
                     ),
                     grid=myst_gallery_grid,
                     grid_item_card=myst_gallery_grid_item,
@@ -86,6 +86,7 @@ the grid layout and thumbnail behaviors when customizing the gallery using the M
             .myst-gallery-grid-item .sd-card-title .reference {
                 color: var(--pst-color-warning);
                 font-size: var(--pst-font-size-h5);
+                font-weight: lighter;
             }
 
         .. tip::

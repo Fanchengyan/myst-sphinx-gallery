@@ -51,7 +51,7 @@ dependencies = [
 
 [project.optional-dependencies]
 
-code_style = ["pre-commit"]
+code_style = ["pre-commit", "ruff"]
 test = [
   "coverage",
   "pytest",
@@ -62,7 +62,9 @@ test = [
   # "pytest-param-files~=0.3.3",
 
 ]
-dev = ["pre-commit",
+dev = [
+  "pre-commit",
+  "ruff",
   "coverage",
   "pytest",
   "pytest-cov",
@@ -109,3 +111,16 @@ markers = [
   "add_rst: Add rst file to src.",
   "slow: marks tests as slow",
 ]
+
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "SIM", "B", "UP"]
+ignore = ["F401", "E501"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+
+[tool.doc8]
+ignore = ["D001"]
+allow-long-titles = true

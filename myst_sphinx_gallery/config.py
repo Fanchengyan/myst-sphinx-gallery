@@ -22,10 +22,27 @@ class ThumbnailConfig:
     #: more information: `<https://pillow.readthedocs.io/en/stable/handbook/tutorial.html#relative-resizing>`_
     operation: Literal["thumbnail", "contain", "cover", "fit", "pad"] = "pad"
 
-    #: The keyword arguments to pass to the operation function.
+    #: The parameters passed to the operation function.
     operation_kwargs: dict[str, int] = field(default_factory=dict)
 
-    #: The operation to perform on the image to save the thumbnail.
+    #: The quality of the static image thumbnail.
+    #:
+    #: .. versionadded:: 0.2.1
+    quality_static: int = 80
+
+    #: The quality of the animated image thumbnail.
+    #:
+    #: .. versionadded:: 0.2.1
+    quality_animated: int = 15  # small quality for smaller size of animated thumbnail
+
+    #: The parameters passed to save function for the thumbnail image.
+    #: See the Pillow documentation for more information:
+    #: `<https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html#webp-saving>`_
+    #:
+    #: .. note::
+    #:    The ``quality`` of the saved image is suggested to be set by the
+    #:    :attr:`quality_static` and :attr:`quality_animated` attributes
+    #:    separately.
     save_kwargs: dict[str, int] = field(default_factory=dict)
 
     def to_dict(self):
@@ -96,6 +113,11 @@ class GalleryConfig:
 
     #: The configuration for the thumbnail image.
     thumbnail_config: ThumbnailConfig = field(default_factory=ThumbnailConfig)
+
+    #: The prefix to use for the target names of the gallery files.
+    #:
+    #: .. versionadded:: 0.2.1
+    target_prefix: str = "example_"
 
     #: A instance of :class:`~myst_sphinx_gallery.TocTree` class to create
     #: a table of content for gallery. Currently, no additional options are supported.

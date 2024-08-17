@@ -1,14 +1,9 @@
 from pathlib import Path
-from tempfile import TemporaryDirectory
 
 import pytest
 
 from myst_sphinx_gallery import ThumbnailConfig
-from myst_sphinx_gallery.gallery import (
-    ExampleConverter,
-    GalleryConfig,
-    generate_gallery,
-)
+from myst_sphinx_gallery.gallery import GalleryConfig, generate_gallery
 
 
 @pytest.fixture
