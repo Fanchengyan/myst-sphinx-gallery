@@ -42,8 +42,8 @@ class Thumbnail:
         operation: Literal["thumbnail", "contain", "cover", "fit", "pad"] = "pad",
         quality_static: int = 80,
         quality_animated: int = 15,
-        operation_kwargs: dict[str, int] = {},
-        save_kwargs: dict[str, int] = {},
+        operation_kwargs: dict[str, int] | None = None,
+        save_kwargs: dict[str, int] | None = None,
     ) -> None:
         """Initialize the Thumbnail object.
 
@@ -60,6 +60,10 @@ class Thumbnail:
         save_kwargs : dict
             The keyword arguments for the save method.
         """
+        if operation_kwargs is None:
+            operation_kwargs = {}
+        if save_kwargs is None:
+            save_kwargs = {}
         if isinstance(image, Image.Image):
             self._image = image
             if hasattr(image, "path"):
@@ -123,8 +127,9 @@ class Thumbnail:
                 if len(size) != 2:
                     raise ValueError("size must be a tuple of length 2")
                 return size
-            except Exception:
-                raise ValueError("size must be a tuple of length 2")
+            except Exception as e:
+                if e is TypeError:
+                    raise ValueError("size must be a tuple of length 2") from e
 
     @property
     def path(self) -> Path:
@@ -186,10 +191,7 @@ class Thumbnail:
         out_path : Path
             The path to the saved thumbnail image.
         """
-        if out_path is None:
-            out_path = self.auto_output_path
-        else:
-            out_path = Path(out_path)
+        out_path = self.auto_output_path if out_path is None else Path(out_path)
         ensure_dir_exists(out_path.parent)
 
         if self.image.n_frames > 1:
@@ -235,7 +237,7 @@ class DocImages:
     def __repr__(self) -> str:
         return f"DocImages(images={len(self.images)})"
 
-    def __add__(self, other: "DocImages") -> "DocImages":
+    def __add__(self, other: DocImages) -> DocImages:
         if isinstance(other, DocImages):
             return DocImages(self.images + other.images)
         else:
@@ -301,7 +303,7 @@ class CellImages:
 
     def _extract_images(self):
         """Extract images from code cell outputs in a notebook."""
-        with open(self.notebook_file, "r", encoding="utf-8") as f:
+        with open(self.notebook_file, encoding="utf-8") as f:
             notebook = nbformat.read(f, as_version=4)
 
         images = []
@@ -407,7 +409,7 @@ def parse_md_images(markdown_content: str) -> DocImages:
 def load_nb_markdown(nb_file: Path) -> str:
     """Load the markdown content from a Jupyter notebook file."""
 
-    with open(nb_file, "r", encoding="utf-8") as f:
+    with open(nb_file, encoding="utf-8") as f:
         notebook = nbformat.read(f, as_version=4)
 
     markdown_cells = []

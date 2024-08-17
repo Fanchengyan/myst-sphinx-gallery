@@ -110,6 +110,15 @@ markers = [
   "slow: marks tests as slow",
 ]
 
+
 [tool.ruff.lint]
-select = ["E", "F"]
+select = ["E", "F", "I", "SIM", "B", "UP"]
 ignore = ["F401", "E501"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+
+[tool.doc8]
+ignore = ["D001"]
+allow-long-titles = true

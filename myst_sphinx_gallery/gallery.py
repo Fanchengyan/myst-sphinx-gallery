@@ -93,7 +93,9 @@ class GalleryGenerator:
                 continue
             folders.append(item)
         if len(folders) == 0:
-            warnings.warn(f"No valid subfolders found in {self.examples_dir}")
+            warnings.warn(
+                f"No valid subfolders found in {self.examples_dir}", stacklevel=1
+            )
         return sorted(folders)
 
     @property
@@ -472,7 +474,7 @@ class ExampleConverter:
         """Load the content of the example file."""
         if self.file_type == "notebook":
             return load_nb_markdown(self.example_file)
-        with open(self.example_file, "r", encoding="utf-8") as f:
+        with open(self.example_file, encoding="utf-8") as f:
             return f.read()
 
     def _use_default_thumbnail(self):
@@ -562,7 +564,7 @@ class ExampleConverter:
 
     def _convert_notebook_file(self):
         """Convert a notebook to a standardized example file."""
-        with open(self.example_file, "r", encoding="utf-8") as f:
+        with open(self.example_file, encoding="utf-8") as f:
             notebook = nbformat.read(f, as_version=4)
 
         # Add a reference to the notebook in the notebook
@@ -575,7 +577,7 @@ class ExampleConverter:
 
     def _convert_text_file(self):
         """Convert a text file (md, rst) to a standardized example file."""
-        with open(self.example_file, "r", encoding="utf-8") as f:
+        with open(self.example_file, encoding="utf-8") as f:
             content = f.read()
 
         # Add a reference to the markdown/rst file
@@ -615,7 +617,7 @@ def write_index_file(
     if not index_file.exists():
         # copy and append the header file if not exists
         with open(index_file, "w", encoding="utf-8") as dst:
-            with open(header_file, "r", encoding="utf-8") as src:
+            with open(header_file, encoding="utf-8") as src:
                 content = f"{prepend_str}\n\n{src.read()}\n{append_str}"
             dst.write(content)
     else:
@@ -626,7 +628,7 @@ def write_index_file(
 
 def get_rst_title(file_path: Path) -> str | None:
     """Get the title of a reStructuredText file."""
-    with open(file_path, "r", encoding="utf-8") as file:
+    with open(file_path, encoding="utf-8") as file:
         content = file.read()
 
     doctree = publish_doctree(content)
