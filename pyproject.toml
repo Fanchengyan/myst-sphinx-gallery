@@ -51,7 +51,7 @@ dependencies = [
 
 [project.optional-dependencies]
 
-code_style = ["pre-commit"]
+code_style = ["pre-commit", "ruff"]
 test = [
   "coverage",
   "pytest",
@@ -62,7 +62,9 @@ test = [
   # "pytest-param-files~=0.3.3",
 
 ]
-dev = ["pre-commit",
+dev = [
+  "pre-commit",
+  "ruff",
   "coverage",
   "pytest",
   "pytest-cov",
