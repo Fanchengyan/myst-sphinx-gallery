@@ -25,3 +25,20 @@ def abs_path(path: Path | str, root_dir: Path | str) -> Path:
     if path.startswith("/"):
         path = f".{path}"
     return (Path(root_dir) / path).resolve()
+
+
+def print_run_time(func):
+    """Print the run time of a function."""
+
+    def wrapper(*args, **kwargs):
+        import time
+
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+
+        print(f"Run time for {func.__name__}: {end_time - start_time:.2f} seconds")
+
+        return result
+
+    return wrapper

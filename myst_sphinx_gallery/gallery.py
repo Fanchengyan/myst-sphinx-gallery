@@ -22,9 +22,10 @@ from .images import (
     parse_md_images,
     parse_rst_images,
 )
-from .io_tools import ensure_dir_exists, safe_remove_file
+from .utils import ensure_dir_exists, print_run_time, safe_remove_file
 
 
+@print_run_time
 def generate_gallery(gallery_config: GalleryConfig | dict):
     """Generate the gallery from the examples directory."""
     if isinstance(gallery_config, dict):

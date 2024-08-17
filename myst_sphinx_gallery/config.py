@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Literal
 
 from .grid import Grid, GridItemCard, TocTree
-from .io_tools import abs_path
+from .utils import abs_path
 
 
 @dataclass

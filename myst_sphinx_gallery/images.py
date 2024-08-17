@@ -13,7 +13,7 @@ from typing import Literal
 import nbformat
 from PIL import Image, ImageOps
 
-from .io_tools import ensure_dir_exists
+from .utils import ensure_dir_exists
 
 OperationMap = {
     "contain": ImageOps.contain,
