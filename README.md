@@ -55,7 +55,7 @@ generate_gallery(
 ```
 
 >[!NOTE]
-> You can generate **multiple galleries** by proper configuration in the `conf.py` file. For more details, please refer to the [Configure multiple galleries](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/multi_galleries.htmll#configure-multiple-galleries).
+> You can generate **multiple galleries** by proper configuration in the `conf.py` file. For more details, please refer to the [Configure multiple galleries](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/multi_galleries.html#configure-multiple-galleries).
 
 ## Construct the examples folder
 
