@@ -117,7 +117,9 @@ class GalleryGenerator:
     @property
     def target_str(self) -> str:
         """the target string in the gallery file used to link to the example file."""
-        target_ref = f"{self.config.target_prefix}{self.index_file.parent.stem}".lower()
+        target_ref = (
+            f"{self.config.target_prefix}{self.index_file.parent.stem}_header".lower()
+        )
         return f".. _{target_ref}:"
 
     @property
@@ -254,7 +256,9 @@ class SectionGenerator:
     @property
     def target_str(self) -> str:
         """the target string in the gallery file used to link to the example file."""
-        target_ref = f"{self.config.target_prefix}{self.index_file.parent.stem}".lower()
+        target_ref = (
+            f"{self.config.target_prefix}{self.index_file.parent.stem}_header".lower()
+        )
         return f".. _{target_ref}:"
 
     @property
