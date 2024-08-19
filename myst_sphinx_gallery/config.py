@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Literal
 
 from .grid import Grid, GridItemCard, TocTree
-from .io_tools import abs_path
+from .utils import abs_path
 
 
 @dataclass
@@ -25,6 +25,16 @@ class ThumbnailConfig:
     #: The parameters passed to the operation function.
     operation_kwargs: dict[str, int] = field(default_factory=dict)
 
+    #: The maximum number of frames to extract from an animated image.
+    #: If the image has more frames, will sample the frames uniformly.
+    #:
+    #: .. tip::
+    #:    If you want to make the thumbnail of animated images to be static images,
+    #:    you can set this value to 1.
+    #:
+    #: .. versionadded:: 0.2.2
+    max_animation_frames: int = 100
+
     #: The quality of the static image thumbnail.
     #:
     #: .. versionadded:: 0.2.1
@@ -33,7 +43,7 @@ class ThumbnailConfig:
     #: The quality of the animated image thumbnail.
     #:
     #: .. versionadded:: 0.2.1
-    quality_animated: int = 15  # small quality for smaller size of animated thumbnail
+    quality_animated: int = 50  # small quality for smaller size of animated thumbnail
 
     #: The parameters passed to save function for the thumbnail image.
     #: See the Pillow documentation for more information:

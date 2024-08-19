@@ -13,7 +13,7 @@ from typing import Literal
 import nbformat
 from PIL import Image, ImageOps
 
-from .io_tools import ensure_dir_exists
+from .utils import ensure_dir_exists, print_run_time
 
 OperationMap = {
     "contain": ImageOps.contain,
@@ -40,6 +40,7 @@ class Thumbnail:
         output_dir: Path | str,
         ref_size: tuple[int, int] | int = (320, 224),
         operation: Literal["thumbnail", "contain", "cover", "fit", "pad"] = "pad",
+        max_animation_frames=50,
         quality_static: int = 80,
         quality_animated: int = 15,
         operation_kwargs: dict[str, int] | None = None,
@@ -54,7 +55,15 @@ class Thumbnail:
         ref_size : tuple[int, int]
             the reference size of the thumbnail image for output.
         operation : str
-            The operation to perform on the image. See the Pillow documentation for more information: `<https://pillow.readthedocs.io/en/stable/handbook/tutorial.html#relative-resizing>`_
+            The operation to perform on the image. See the Pillow documentation
+            for more information: `<https://pillow.readthedocs.io/en/stable/handbook/tutorial.html#relative-resizing>`_
+        max_animation_frames : int
+            The maximum number of frames to extract from an animated image.
+            If the image has more frames, will sample the frames uniformly.
+        quality_static : int
+            The quality of the static image thumbnail.
+        quality_animated : int
+            The quality of the animated image thumbnail.
         operation_kwargs : dict
             The keyword arguments for the operation.
         save_kwargs : dict
@@ -79,6 +88,7 @@ class Thumbnail:
         self.operation = operation
         self.operation_kwargs = operation_kwargs
         self._output_dir = Path(output_dir)
+        self.max_animation_frames = max_animation_frames
         self.quality_static = quality_static
         self.quality_animated = quality_animated
 
@@ -101,7 +111,6 @@ class Thumbnail:
                 {
                     "quality": self.quality_animated,
                     "save_all": True,
-                    "duration": self.image.info["duration"],
                     "loop": 0,
                 }
             )
@@ -112,6 +121,20 @@ class Thumbnail:
 
         kwargs.update(save_kwargs)
         return kwargs
+
+    def _parse_frames(self):
+        """Parse the frames and duration of the output animated image."""
+        n_frames = self.image.n_frames
+        max_frames = self.max_animation_frames
+        if n_frames > max_frames:
+            interval = n_frames // max_frames
+            frames = list(range(0, n_frames, interval))[:max_frames]
+            duration = self.image.info["duration"] * interval
+        else:
+            frames = range(n_frames)
+            duration = self.image.info["duration"]
+
+        return frames, duration
 
     def _format_size(self, size: tuple[int, int] | int) -> tuple[int, int]:
         """Format the size of the thumbnail image to a tuple of length 2."""
@@ -177,6 +200,7 @@ class Thumbnail:
 
         return thumbnail
 
+    @print_run_time
     def save_thumbnail(self, out_path: Path | None = None) -> Path:
         """Save the thumbnail image to the output directory.
 
@@ -193,11 +217,15 @@ class Thumbnail:
         """
         out_path = self.auto_output_path if out_path is None else Path(out_path)
         ensure_dir_exists(out_path.parent)
+        print(f"Saving thumbnail to {out_path}")
 
         if self.image.n_frames > 1:
+            frames_idx, duration = self._parse_frames()
+            self.save_kwargs.update({"duration": duration})
+            # extract frames
             frames = []
-            for frame in range(self.image.n_frames):
-                self.image.seek(frame)
+            for idx in frames_idx:
+                self.image.seek(idx)
                 frames.append(self.generate_thumbnail())
 
             frames[0].save(

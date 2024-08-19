@@ -22,9 +22,10 @@ from .images import (
     parse_md_images,
     parse_rst_images,
 )
-from .io_tools import ensure_dir_exists, safe_remove_file
+from .utils import ensure_dir_exists, print_run_time, safe_remove_file
 
 
+@print_run_time
 def generate_gallery(gallery_config: GalleryConfig | dict):
     """Generate the gallery from the examples directory."""
     if isinstance(gallery_config, dict):
@@ -116,7 +117,9 @@ class GalleryGenerator:
     @property
     def target_str(self) -> str:
         """the target string in the gallery file used to link to the example file."""
-        target_ref = f"{self.config.target_prefix}{self.index_file.parent.stem}".lower()
+        target_ref = (
+            f"{self.config.target_prefix}{self.index_file.parent.stem}_header".lower()
+        )
         return f".. _{target_ref}:"
 
     @property
@@ -253,7 +256,9 @@ class SectionGenerator:
     @property
     def target_str(self) -> str:
         """the target string in the gallery file used to link to the example file."""
-        target_ref = f"{self.config.target_prefix}{self.index_file.parent.stem}".lower()
+        target_ref = (
+            f"{self.config.target_prefix}{self.index_file.parent.stem}_header".lower()
+        )
         return f".. _{target_ref}:"
 
     @property

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from myst_sphinx_gallery.io_tools import abs_path, ensure_dir_exists, safe_remove_file
+from myst_sphinx_gallery.utils import abs_path, ensure_dir_exists, safe_remove_file
 
 cwd = Path(__file__).parent
 
