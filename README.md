@@ -16,7 +16,8 @@
 
 - **Convenient to use** - You can easily generate a gallery of examples from
 your Jupyter Notebooks, Markdown, or reStructuredText files. It works with `MyST` Ecosystem, including [MyST-parser](https://myst-parser.readthedocs.io/en/latest/) and [MyST-NB](https://myst-nb.readthedocs.io/en/latest/), to render markdown or jupyter notebooks in Sphinx documentation.
-- **Customizable** - You can customize the gallery configuration, such as the strategy to select the thumbnail, the gallery layout, and the gallery directory.
+- **Fast and robust** - It utilizes existing images to generate gallery thumbnails, eliminating code execution delays and potential accidental errors when building gallery.
+- **Customizable** - You can customize the gallery, such as thumbnail selection, layout, and styling.
 
 ## Documentation
 

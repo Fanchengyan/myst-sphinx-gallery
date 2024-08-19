@@ -11,7 +11,8 @@ example files in the other documentation files.
 Rule for generating targets
 ---------------------------
 
-**For example files**:
+For example files
+~~~~~~~~~~~~~~~~~
 
 - removing the number prefix ``dd-`` (if exists) and file suffix.
 - converring the letters in the file name to lowercase (target must be small letters).
@@ -22,10 +23,14 @@ Rule for generating targets
     The target is generated based on the file name, so you need to make sure the file name is unique.
 
 
-**For GALLERY_HEADER.rst file**:
+For ``GALLERY_HEADER.rst`` file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The rules are the same as the example files, except that the
-**target is generated based on the folder name**.
+The rules are the same as the example files, except:
+
+- target is generated based on the folder name.
+- adding a suffix ``_header`` to avoid conflict with the example files.
+  (need version 0.2.2 or later)
 
 .. versionchanged:: 0.2.1
 
