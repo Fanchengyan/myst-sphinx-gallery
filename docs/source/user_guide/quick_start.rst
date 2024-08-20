@@ -9,11 +9,22 @@ This page gives a quick start guide of how to get started with MyST Sphinx Galle
 Installation
 ------------
 
-You can install MyST Sphinx Gallery using pip:
+**MyST Sphinx Gallery** is a Python package, and requires Python >= 3.8. You can install the latest release using pip from the PyPI:
 
 .. code-block:: bash
 
    pip install myst-sphinx-gallery
+
+or using ``conda`` / ``mamba``:
+
+.. code-block:: bash
+
+   conda install -c conda-forge myst-sphinx-gallery
+
+.. code-block:: bash
+
+   mamba install -c conda-forge myst-sphinx-gallery
+
 
 Configure and usages
 --------------------

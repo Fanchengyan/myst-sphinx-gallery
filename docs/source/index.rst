@@ -2,17 +2,28 @@
 MyST Sphinx Gallery
 ===================
 
-.. image:: https://img.shields.io/pypi/v/myst-sphinx-gallery
-   :target: https://pypi.org/project/myst-sphinx-gallery/
-   :alt: PyPI
+.. image:: https://img.shields.io/badge/recipe-myst--sphinx--gallery-green.svg
+   :target: https://anaconda.org/conda-forge/myst-sphinx-gallery
+
 
 .. image:: https://readthedocs.org/projects/myst-sphinx-gallery/badge/?version=latest
    :target: https://myst-sphinx-gallery.readthedocs.io/en/latest/?badge=latest
-   :alt: Documentation Status
+
+.. image:: https://img.shields.io/conda/vn/conda-forge/myst-sphinx-gallery.svg
+   :target: https://anaconda.org/conda-forge/myst-sphinx-gallery
+
+.. image:: https://img.shields.io/pypi/v/myst-sphinx-gallery
+   :target: https://pypi.org/project/myst-sphinx-gallery/
+
+.. image:: https://img.shields.io/conda/dn/conda-forge/myst-sphinx-gallery.svg
+   :target: https://anaconda.org/conda-forge/myst-sphinx-gallery
+
+.. image:: https://github.com/Fanchengyan/myst-sphinx-gallery/actions/workflows/tests.yml/badge.svg
+   :target: https://github.com/Fanchengyan/myst-sphinx-gallery/actions/workflows/tests.yml
 
 .. image:: https://codecov.io/gh/Fanchengyan/myst-sphinx-gallery/graph/badge.svg?token=IHXYE1K1G9
    :target: https://codecov.io/gh/Fanchengyan/myst-sphinx-gallery
-   :alt: Code Coverage
+
 
 Introduction
 ------------

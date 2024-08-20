@@ -2,9 +2,16 @@
 <img src="https://raw.githubusercontent.com/Fanchengyan/myst-sphinx-gallery/main/docs/source/_static/logo/logo.svg" width="400">
 </h1><br>
 
-[![PyPI](https://img.shields.io/pypi/v/myst-sphinx-gallery)](https://pypi.org/project/myst-sphinx-gallery/)
+
+[![Conda Recipe](https://img.shields.io/badge/recipe-myst--sphinx--gallery-green.svg)](https://anaconda.org/conda-forge/myst-sphinx-gallery)
 [![Documentation Status](https://readthedocs.org/projects/myst-sphinx-gallery/badge/?version=latest)](https://myst-sphinx-gallery.readthedocs.io/en/latest/?badge=latest)
+[![Language](https://img.shields.io/badge/python-3.8%2B-blue.svg?style=flat-square)](https://www.python.org/)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/myst-sphinx-gallery.svg)](https://anaconda.org/conda-forge/myst-sphinx-gallery)
+[![PyPI](https://img.shields.io/pypi/v/myst-sphinx-gallery)](https://pypi.org/project/myst-sphinx-gallery/)
+[![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/myst-sphinx-gallery.svg)](https://anaconda.org/conda-forge/myst-sphinx-gallery)
+[![tests](https://github.com/Fanchengyan/myst-sphinx-gallery/actions/workflows/tests.yml/badge.svg)](https://github.com/Fanchengyan/myst-sphinx-gallery/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/Fanchengyan/myst-sphinx-gallery/graph/badge.svg?token=IHXYE1K1G9)](https://codecov.io/gh/Fanchengyan/myst-sphinx-gallery)
+
 
 ## Introduction
 
@@ -35,6 +42,16 @@ The detailed documentation is available at: [https://myst-sphinx-gallery.readthe
 
 ```bash
 pip install myst_sphinx_gallery
+```
+
+or using `conda` / `mamba` from the conda-forge channel:
+
+```bash
+conda install -c conda-forge myst-sphinx-gallery
+```
+
+```bash
+mamba install -c conda-forge myst-sphinx-gallery
 ```
 
 ## Configure and usages
