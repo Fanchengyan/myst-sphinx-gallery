@@ -22,23 +22,47 @@ from .images import (
     parse_md_images,
     parse_rst_images,
 )
-from .utils import ensure_dir_exists, print_run_time, safe_remove_file
+from .utils import (
+    default_thumbnail,
+    ensure_dir_exists,
+    print_run_time,
+    safe_remove_file,
+)
 
 
 @print_run_time
 def generate_gallery(gallery_config: GalleryConfig | dict):
-    """Generate the gallery from the examples directory."""
+    """Generate the gallery from the examples directory.
+
+    Parameters
+    ----------
+    gallery_config : GalleryConfig | dict
+        The gallery configuration.
+
+    """
     if isinstance(gallery_config, dict):
         gallery_config = GalleryConfig(**gallery_config)
 
+    print(gallery_config)
     n_gallery = len(gallery_config.gallery_dirs)
-    for i in range(n_gallery):
-        gallery = GalleryGenerator(
-            gallery_config.examples_dirs[i],
-            gallery_config.gallery_dirs[i],
-            gallery_config,
-        )
-        gallery.convert()
+    if gallery_config.sub_gallery:
+        for i in range(n_gallery):
+            header_file = gallery_config.examples_dirs[i] / "GALLERY_HEADER.rst"
+            gallery = SectionGenerator(
+                header_file,
+                gallery_config.examples_dirs[i],
+                gallery_config.gallery_dirs[i],
+                gallery_config,
+            )
+            gallery.convert()
+    else:
+        for i in range(n_gallery):
+            gallery = GalleryGenerator(
+                gallery_config.examples_dirs[i],
+                gallery_config.gallery_dirs[i],
+                gallery_config,
+            )
+            gallery.convert()
 
 
 class GalleryGenerator:
@@ -54,6 +78,8 @@ class GalleryGenerator:
     ) -> None:
         """Initialize the GalleryGenerator object.
 
+        Parameters
+        ----------
         examples_dir: Path,
             The path to the input examples directory.
         gallery_dir : Path
@@ -194,6 +220,8 @@ class SectionGenerator:
     ) -> None:
         """Initialize the SectionGenerator object.
 
+        Parameters
+        ----------
         header_file : Path
             The path to the example header file.
         examples_dir: Path,
@@ -202,11 +230,13 @@ class SectionGenerator:
             The path to the output gallery directory.
         config : GalleryConfig
             The gallery configuration.
+
         """
         self.examples_dir = Path(examples_dir)
         self.gallery_dir = Path(gallery_dir)
         self._header_file = Path(header_file)
         self._config = config
+        self.sub_gallery = config.sub_gallery
 
         self._example_files = self._scan_example_files()
         self._index_file = self._parse_index_file()
@@ -235,7 +265,10 @@ class SectionGenerator:
         index_file = self.gallery_dir / self.header_file.relative_to(self.examples_dir)
         index_file = index_file.with_name("index.rst")
         folder, name = remove_num_prefix(index_file)
-        index_file = self.gallery_dir / folder / name
+        if self.sub_gallery:
+            index_file = self.gallery_dir / name
+        else:
+            index_file = self.gallery_dir / folder / name
         return index_file
 
     @property
@@ -291,9 +324,9 @@ class SectionGenerator:
         """The grid item card options for gallery section."""
         return self._grid_item_card.copy()
 
-    def add_grid_card(self, target_ref: str, img_path: str) -> str:
+    def add_grid_card(self, grid_item_card: str) -> str:
         """add a grid card for the gallery section grid."""
-        self._grid.add_item(self._grid_item_card.format(target_ref, img_path))
+        self._grid.add_item(grid_item_card)
 
     def add_example_to_toc(self, gallery: str):
         """add a example to the table of contents of section."""
@@ -311,10 +344,13 @@ class SectionGenerator:
         """Convert the example files to standardized example files."""
         for example_file in self.example_files:
             conv = ExampleConverter(
-                example_file, self.examples_dir, self.gallery_dir, self.config
+                example_file,
+                self.examples_dir,
+                self.gallery_dir,
+                self.config,
             )
             conv.convert()
-            self.add_grid_card(conv.target_ref, conv.gallery_thumb)
+            self.add_grid_card(conv.grid_item_card)
             self.add_example_to_toc(conv.gallery_file)
 
         self.convert_section_header_file()
@@ -339,6 +375,8 @@ class ExampleConverter:
     ) -> None:
         """Initialize the ExampleConverter.
 
+        Parameters
+        ----------
         example_file : Path | str
             The path to the example file.
         examples_dir : Path | str
@@ -347,8 +385,10 @@ class ExampleConverter:
             The path to the output gallery directory.
         config : GalleryConfig
             The gallery configuration.
+
         """
         self._config = config
+        self.sub_gallery = config.sub_gallery
         self.thumbnail_strategy = config.thumbnail_strategy
         self.notebook_thumbnail_strategy = config.notebook_thumbnail_strategy
         self._example_file = Path(example_file)
@@ -373,16 +413,22 @@ class ExampleConverter:
         relative_path = self.example_file.relative_to(self.examples_dir)
 
         gallery_file = self.gallery_dir / relative_path
-        if not gallery_file.parent.parent.samefile(self.gallery_dir):
-            raise ValueError(
+
+        if not self.sub_gallery and not gallery_file.parent.parent.samefile(
+            self.gallery_dir
+        ):
+            msg = (
                 f"Too many levels of subfolders in the example file: {self.example_file}\n"
                 "only one level of subfolders is allowed."
             )
+            raise ValueError(msg)
 
         # Remove the index prefix from the folder and file name for the gallery file
         folder, name = remove_num_prefix(gallery_file)
-
-        gallery_file = self.gallery_dir / folder / name
+        if self.sub_gallery:
+            gallery_file = self.gallery_dir / name
+        else:
+            gallery_file = self.gallery_dir / folder / name
         return gallery_file, relative_path
 
     def _parse_example_type(self) -> Literal["notebook", "markdown", "rst"]:
@@ -423,6 +469,12 @@ class ExampleConverter:
     def gallery_file(self) -> Path:
         """path to the output gallery file."""
         return self._gallery_file
+
+    @property
+    def grid_item_card(self) -> str:
+        """The grid item card for the gallery."""
+        self._parse_thumb()
+        return self.config.grid_item_card.format(self.target_ref, self.gallery_thumb)
 
     @property
     def target_str(self) -> str:
@@ -598,8 +650,6 @@ class ExampleConverter:
         elif self.file_type in ["markdown", "rst"]:
             self._convert_text_file()
 
-        self._parse_thumb()
-
 
 def write_index_file(
     header_file: Path,
@@ -661,8 +711,3 @@ def remove_num_prefix(header_file: Path) -> tuple[str, str]:
     if name.split("-")[0].isdigit():
         name = "-".join(name.split("-")[1:])
     return folder, name
-
-
-def default_thumbnail():
-    """Return the path to the default thumbnail image."""
-    return Path(__file__).parent / "_static" / "no_image.png"

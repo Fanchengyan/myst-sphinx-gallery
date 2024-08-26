@@ -1,12 +1,17 @@
 .. _gallery3_header:
 
+.. _customizing_grid_and_thumbnail:
+
 ==============================================
 Examples-3 : Customizing  Layout and Thumbnail
 ==============================================
 
+This is the **third gallery example**, which is a **sub-gallery**.
 
-This is the **third gallery example**, which provides an intuitive understanding of
-the grid layout and thumbnail behaviors when customizing the gallery using the MyST Sphinx Gallery extension.
+This gallery provides an intuitive understanding of
+the grid layout and thumbnail behaviors when customizing the gallery using
+the MyST Sphinx Gallery extension.
+
 
 .. hint::
     The following configurations are used in this gallery example:
@@ -24,7 +29,7 @@ the grid layout and thumbnail behaviors when customizing the gallery using the M
 
         .. code-block:: python
             :caption: conf.py
-            :emphasize-lines: 9, 15, 25
+            :emphasize-lines: 9, 15,18, 25
 
             from myst_sphinx_gallery import (
                 GalleryConfig,
@@ -35,7 +40,7 @@ the grid layout and thumbnail behaviors when customizing the gallery using the M
             )
 
             myst_gallery_grid = Grid(
-                grid_option=(1,2,2,2),
+                grid_args=(1,2,2,2),
                 margin=3,
                 padding=2,
             )
@@ -48,6 +53,7 @@ the grid layout and thumbnail behaviors when customizing the gallery using the M
                     examples_dirs="../../examples3",
                     gallery_dirs="auto_examples3",
                     root_dir=Path(__file__).parent,
+                    sub_gallery=True,
                     notebook_thumbnail_strategy="markdown",
                     thumbnail_strategy="last",
                     thumbnail_config=ThumbnailConfig(
@@ -55,12 +61,13 @@ the grid layout and thumbnail behaviors when customizing the gallery using the M
                         operation="pad",
                         operation_kwargs={"color": "orange"},
                         quality_static=90,
+                        skip_existing=True,
                     ),
+                    target_prefix="myst_gallery_",
                     grid=myst_gallery_grid,
                     grid_item_card=myst_gallery_grid_item,
                 )
             )
-
     .. admonition:: gallery.css
         :class: dropdown
 
@@ -68,6 +75,7 @@ the grid layout and thumbnail behaviors when customizing the gallery using the M
 
         .. code-block:: css
 
+            /* add margin to the thumbnail */
             .myst-gallery-grid-item .sd-card-img-top {
                 margin: 10px auto;
                 background: none !important;
@@ -79,10 +87,12 @@ the grid layout and thumbnail behaviors when customizing the gallery using the M
                 display: block;
             }
 
+            /* change the color of the card border */
             .myst-gallery-grid-item .sd-card-hover {
                 border: 1px solid var(--pst-color-warning);
             }
 
+            /* change the color of the card description text */
             .myst-gallery-grid-item .sd-card-title .reference {
                 color: var(--pst-color-warning);
                 font-size: var(--pst-font-size-h5);

@@ -1,8 +1,20 @@
 # from myst_nb.sphinx_ import Parser
+from __future__ import annotations
+
 from sphinx.application import Sphinx
 
 from .config import GalleryConfig
+from .directives import MiniGallery
 from .gallery import generate_gallery
+from .utils import gallery_static_path
+
+
+def config_inited(app: Sphinx):
+    """Append path to packaged static files to `html_static_path`."""
+    path = str(gallery_static_path())
+    if path not in app.config.html_static_path:
+        app.config.html_static_path.append(path)
+    app.add_css_file("myst_sphinx_gallery.css", priority=501)
 
 
 def main(app: Sphinx):
@@ -25,5 +37,10 @@ def main(app: Sphinx):
 
 
 def sphinx_setup(app: Sphinx):
+    app.add_directive("mini_gallery", MiniGallery)
+
     app.add_config_value("myst_sphinx_gallery_config", None, "")
+    app.add_config_value("myst_sphinx_mini_gallery_config", None, "")
     app.connect("builder-inited", main)
+    app.connect("builder-inited", config_inited)
+    app.setup_extension("sphinx_design")

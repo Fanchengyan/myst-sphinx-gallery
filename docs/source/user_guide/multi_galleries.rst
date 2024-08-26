@@ -8,23 +8,28 @@ Configuration for Generating Galleries
 This page describes how to
 
 - setup configuration for the gallery using the ``myst_sphinx_gallery`` extension
-- create **multiple galleries**
+- create **multiple galleries** or **sub-galleries**
 
 
-Setup for ``conf.py``
-=====================
+Setup for Galleries in ``conf.py``
+==================================
 
-There are two ways to setup configuration in the :file:`conf.py` file:
+There are two ways to setup configuration for the gallery in the :file:`conf.py` file:
 
-1. add the ``myst_sphinx_gallery`` extension to the ``extensions`` list and specify the ``myst_sphinx_gallery_config`` variable
-2. directly call the :func:`~myst_sphinx_gallery.generate_gallery` function
+1. add the ``myst_sphinx_gallery`` extension to the ``extensions`` list and specify the ``myst_sphinx_gallery_config`` variable.
+2. directly call the :func:`~myst_sphinx_gallery.generate_gallery` function directly in the ``conf.py`` file.
 
 
-
-1. Add extension to the ``extensions`` list
--------------------------------------------
+Add extension to the ``extensions`` list
+----------------------------------------
 
 You can add the ``myst_sphinx_gallery`` extension to the ``extensions`` list and specify the ``myst_sphinx_gallery_config`` variable in the ``conf.py`` file to configure the gallery.
+
+.. note::
+
+    You can only generate galleries with the same configuration in this manner.
+    If you want to create **multiple galleries with different configurations**
+    or **sub-galleries**, please refer to :ref:`call_function_directly` and :ref:`multi_galleries`.
 
 
 .. admonition:: Example conf.py
@@ -60,11 +65,16 @@ The parameters in the ``myst_sphinx_gallery_config`` variable will be used to co
     - The :class:`~myst_sphinx_gallery.GalleryConfig` is recommended as it provides type hints, which can be helpful for IDEs and linters.
 
 
-1. Call the ``generate_gallery`` function
------------------------------------------
+.. _call_function_directly:
 
+Call the function directly
+--------------------------
 
-The :func:`~myst_sphinx_gallery.generate_gallery` function can be called directly in the ``conf.py`` file to generate the gallery.
+Call ``generate_gallery`` function for galleries
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The :func:`~myst_sphinx_gallery.generate_gallery` function can be called
+directly in the ``conf.py`` file to generate the galleries.
 
 
 .. admonition:: Example conf.py
@@ -91,7 +101,6 @@ The :func:`~myst_sphinx_gallery.generate_gallery` function can be called directl
 .. hint::
 
     In this case, there is no need to adding the ``myst_sphinx_gallery`` extension in the ``extensions`` list or specifying the ``myst_sphinx_gallery_config`` variable.
-
 
 
 .. _multi_galleries:

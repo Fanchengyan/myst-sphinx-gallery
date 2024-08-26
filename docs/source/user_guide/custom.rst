@@ -78,7 +78,7 @@ Following code is an example of customizing the layout of the gallery:
             gallery_dirs="auto_examples3",
             root_dir=Path(__file__).parent,
             grid=Grid(
-                grid_option=(1, 2, 2, 2),
+                grid_args=(1, 2, 2, 2),
                 margin=3,
                 padding=2,
             ),
@@ -106,7 +106,7 @@ following code in the ``conf.py`` file:
     from myst_sphinx_gallery import generate_gallery, GalleryConfig, Grid, GridItemCard
 
     myst_gallery_grid = Grid(
-        grid_option=(1, 2, 2, 2),
+        grid_args=(1, 2, 2, 2),
         margin=3,
         padding=2,
     )

@@ -13,13 +13,17 @@ from myst_sphinx_gallery import (
     generate_gallery,
 )
 
-myst_sphinx_gallery_config = {
-    "examples_dirs": "../../examples1",
-    "gallery_dirs": "auto_examples1",
-    "root_dir": Path(__file__).parent,
-    "notebook_thumbnail_strategy": "code",
-    "thumbnail_strategy": "last",
-}
+myst_sphinx_gallery_config = GalleryConfig(
+    examples_dirs="../../examples1",
+    gallery_dirs="auto_examples1",
+    root_dir=Path(__file__).parent,
+    notebook_thumbnail_strategy="code",
+    thumbnail_strategy="last",
+    grid_item_card=GridItemCard(
+        border=0,
+    ),
+)
+
 
 generate_gallery(
     GalleryConfig(
@@ -31,21 +35,13 @@ generate_gallery(
     )
 )
 
-myst_gallery_grid = Grid(
-    grid_option=(1, 2, 2, 2),
-    margin=3,
-    padding=2,
-)
-myst_gallery_grid.add_option("class-container", "myst-gallery-grid")
-
-myst_gallery_grid_item = GridItemCard(columns=5, margin=3, padding=3)
-myst_gallery_grid_item.add_option("class-item", "myst-gallery-grid-item")
 
 generate_gallery(
     GalleryConfig(
         examples_dirs="../../examples3",
         gallery_dirs="auto_examples3",
         root_dir=Path(__file__).parent,
+        sub_gallery=True,
         notebook_thumbnail_strategy="markdown",
         thumbnail_strategy="last",
         thumbnail_config=ThumbnailConfig(
@@ -53,10 +49,9 @@ generate_gallery(
             operation="pad",
             operation_kwargs={"color": "orange"},
             quality_static=90,
+            skip_existing=True,
         ),
         target_prefix="myst_gallery_",
-        grid=myst_gallery_grid,
-        grid_item_card=myst_gallery_grid_item,
     )
 )
 
@@ -83,7 +78,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.todo",
     "sphinx_copybutton",
-    "sphinx_design",
+    # "sphinx_design",
     "sphinx_togglebutton",
     "myst_nb",
     "myst_sphinx_gallery",
@@ -167,4 +162,5 @@ intersphinx_mapping = {
 
 # -- myst_sphinx_gallery package ----------------------------------------------------------
 # Location of MyST Sphinx Gallery files
+sys.path.insert(0, os.path.abspath("./../.."))
 sys.path.insert(0, os.path.abspath("./../.."))

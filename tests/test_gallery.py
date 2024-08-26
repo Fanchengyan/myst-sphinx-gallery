@@ -13,25 +13,15 @@ def cwd():
 
 
 @pytest.fixture
-def examples_dir():
-    return "../../examples1"
-
-
-@pytest.fixture
-def gallery_dir():
-    return "../../tests/_build/auto_examples"
-
-
-@pytest.fixture
 def gallery_dir_thumbnail():
     return "../../tests/_build/auto_examples_thumbnail"
 
 
 @pytest.fixture
-def config(examples_dir, gallery_dir, cwd):
+def config(cwd):
     return GalleryConfig(
-        examples_dirs=examples_dir,
-        gallery_dirs=gallery_dir,
+        examples_dirs="../../examples1",
+        gallery_dirs="../../tests/_build/auto_examples",
         root_dir=cwd,
         thumbnail_strategy="first",
         notebook_thumbnail_strategy="markdown",
@@ -39,9 +29,21 @@ def config(examples_dir, gallery_dir, cwd):
 
 
 @pytest.fixture
-def config_thumbnail(examples_dir, gallery_dir_thumbnail, cwd):
+def config2(cwd):
     return GalleryConfig(
-        examples_dirs=examples_dir,
+        examples_dirs="../../examples3",
+        gallery_dirs="../../tests/_build/auto_examples3",
+        root_dir=cwd,
+        sub_gallery=True,
+        thumbnail_strategy="first",
+        notebook_thumbnail_strategy="markdown",
+    )
+
+
+@pytest.fixture
+def config_thumbnail(gallery_dir_thumbnail, cwd):
+    return GalleryConfig(
+        examples_dirs="../../examples1",
         gallery_dirs=gallery_dir_thumbnail,
         root_dir=cwd,
         thumbnail_strategy="first",
@@ -64,6 +66,12 @@ def test_generate_gallery(config):
     generate_gallery(config)
 
 
+def test_generate_gallery_section(config2):
+    prrint_sep()
+    print("config : ", config2)
+    generate_gallery(config2)
+
+
 def test_generate_gallery_thumbnail(config_thumbnail):
     prrint_sep()
     print("Generate the gallery with the thumbnail configuration")
@@ -74,6 +82,11 @@ def test_generate_gallery_thumbnail(config_thumbnail):
 
     prrint_sep()
     thumb_dir = config_thumbnail.gallery_dirs[0] / "myst_sphinx_gallery_thumbs"
+    print(
+        f">>> Processing thumbnail images are in {thumb_dir}\n"
+        ">>> You can check whether the thumbnail images are generated with the black background in the padding area."
+    )
+    prrint_sep()
     print(
         f">>> Processing thumbnail images are in {thumb_dir}\n"
         ">>> You can check whether the thumbnail images are generated with the black background in the padding area."

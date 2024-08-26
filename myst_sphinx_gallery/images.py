@@ -43,6 +43,7 @@ class Thumbnail:
         max_animation_frames=50,
         quality_static: int = 80,
         quality_animated: int = 15,
+        skip_existing: bool = False,
         operation_kwargs: dict[str, int] | None = None,
         save_kwargs: dict[str, int] | None = None,
     ) -> None:
@@ -64,6 +65,8 @@ class Thumbnail:
             The quality of the static image thumbnail.
         quality_animated : int
             The quality of the animated image thumbnail.
+        skip_existing : bool
+            Whether to skip the existing thumbnail image if it already been created.
         operation_kwargs : dict
             The keyword arguments for the operation.
         save_kwargs : dict
@@ -91,6 +94,7 @@ class Thumbnail:
         self.max_animation_frames = max_animation_frames
         self.quality_static = quality_static
         self.quality_animated = quality_animated
+        self.skip_existing = skip_existing
 
         self._ref_size = self._format_size(ref_size)
         self._save_kwargs = self._format_save_kwargs(save_kwargs)
@@ -216,6 +220,11 @@ class Thumbnail:
             The path to the saved thumbnail image.
         """
         out_path = self.auto_output_path if out_path is None else Path(out_path)
+
+        if out_path.exists() and self.skip_existing:
+            print(f"Skipping existing thumbnail at {out_path}")
+            return out_path
+
         ensure_dir_exists(out_path.parent)
         print(f"Saving thumbnail to {out_path}")
 

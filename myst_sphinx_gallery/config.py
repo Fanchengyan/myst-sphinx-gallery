@@ -45,6 +45,10 @@ class ThumbnailConfig:
     #: .. versionadded:: 0.2.1
     quality_animated: int = 50  # small quality for smaller size of animated thumbnail
 
+    #: Whether to skip the existing thumbnail image if it already been created.
+    #: If True, the thumbnail image will not be re-created if it already exists.
+    skip_existing: bool = True
+
     #: The parameters passed to save function for the thumbnail image.
     #: See the Pillow documentation for more information:
     #: `<https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html#webp-saving>`_
@@ -108,6 +112,9 @@ class GalleryConfig:
     #:    For example, ``Path(__file__).parent`` is the root directory in this case.
     root_dir: Path | str
 
+    #: Whether to generate a sub-gallery for each example.
+    sub_gallery: bool = False
+
     #: The strategy to use for selecting the thumbnail image for each example
     #: if multiple images are candidates.
     thumbnail_strategy: Literal["first", "last"] = "last"
@@ -163,9 +170,13 @@ class GalleryConfig:
         self.grid = self.grid.copy()
         self.grid_item_card = self.grid_item_card.copy()
 
-    def abs_path(self, path: Path | str) -> Path:
+    def abs_path(
+        self,
+        path: Path | str,
+        method: Literal["resolve", "rglob"] = "resolve",
+    ) -> Path:
         """Convert a path to an absolute path using the root directory"""
-        return abs_path(path, self.root_dir)
+        return abs_path(path, self.root_dir, method=method)
 
     def to_dict(self):
         """Convert the configuration to a dictionary"""

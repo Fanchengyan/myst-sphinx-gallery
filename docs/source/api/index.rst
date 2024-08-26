@@ -13,3 +13,4 @@ This section contains the API reference documentation for the MyST Sphinx Galler
    gallery
    images
    config
+   directive
