@@ -216,6 +216,10 @@ class Thumbnail:
             The path to the saved thumbnail image.
         """
         out_path = self.auto_output_path if out_path is None else Path(out_path)
+        if out_path.exists():
+            print(f"Thumbnail {out_path} already exists... skipping.")
+            return out_path
+
         ensure_dir_exists(out_path.parent)
         print(f"Saving thumbnail to {out_path}")
 
