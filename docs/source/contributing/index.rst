@@ -82,7 +82,7 @@ installed from those files:
 
     python -m pip install ".[dev]"
 
-Sphinx Gallery requires that `setuptools
+MyST Sphinx Gallery requires that `setuptools
 <https://setuptools.pypa.io/en/latest/setuptools.html>`_ is installed. It is
 usually packaged with python, but if necessary can be installed using ``pip``:
 
@@ -97,7 +97,7 @@ Install for Development
 -----------------------
 
 Editable installs means that the environment Python will always use the most
-recently changed version of your code. To install Sphinx Gallery in editable
+recently changed version of your code. To install MyST Sphinx Gallery in editable
 mode, ensure you are in the sphinx-gallery directory
 
 .. code-block:: bash
@@ -139,21 +139,34 @@ To clean up the build files and generated galleries, run:
 
 .. _pre-commit-hooks:
 
-Install pre-commit hooks
-------------------------
+Install ruff and pre-commit
+---------------------------
 
-pre-commit hooks check for things like spelling and formatting in contributed
-code and documentation. To set up pre-commit hooks:
+To ensure that code contributions conform to style guide, we use the `ruff
+<https://docs.astral.sh/ruff/>`_ tool to check for common mistakes and uniform
+code style. The `pre-commit <https://pre-commit.com/>`_ is used to run these checks
+automatically while committing code. To install ruff and pre-commit:
+
+.. code-block:: bash
+
+    python -m pip install ruff pre-commit
+
+
+To run ruff on all files in the repository:
+
+.. code-block:: bash
+
+    ruff check .
+
+
+To install pre-commit hooks, which will run all checks on all files before each
+commit, run:
+
 
 .. code-block:: bash
 
     pre-commit install
 
-
-.. _code-contributions:
-
-
-.. _code-contrib-testing:
 
 Testing
 -------
