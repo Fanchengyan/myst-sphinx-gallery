@@ -1,13 +1,13 @@
-"""
-Patterns for the myst-sphinx-gallery extension.
-"""
+"""Patterns for the myst-sphinx-gallery extension."""
 
 from __future__ import annotations
 
 import warnings
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Literal
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 grid_item_card = r"""
     .. grid-item-card:: :ref:`{target_ref}`
@@ -42,24 +42,28 @@ class_options = grid_classes + card_classes + card_classes_invalid
 class TocTree:
     """A class to create a table of content for the gallery images."""
 
-    def __init__(self, pattern: str | None = None):
+    def __init__(self, pattern: str | None = None) -> None:
+        """Initialize the TocTree class."""
         if pattern:
             self._pattern = pattern
         else:
             self._pattern = "\n\n.. toctree::\n    :hidden:\n\n"
 
     def __str__(self) -> str:
+        """Return the table of content pattern."""
         return self._pattern
 
     def __repr__(self) -> str:
+        """Return the table of content pattern."""
         return f"TocTree({self._pattern})"
 
-    def add_item(self, item: str):
+    def add_item(self, item: str) -> None:
         """Add an item to the table of content."""
         self._pattern += f"    {item}\n"
 
     @property
     def pattern(self) -> str:
+        """Return the table of content pattern."""
         return self._pattern
 
     def parse_item(self, file_path: Path, ref_dir: Path) -> str:
@@ -71,9 +75,9 @@ class TocTree:
             The file path of the item.
         ref_dir : Path
             The reference directory for the item.
+
         """
-        item = file_path.relative_to(ref_dir).with_suffix("").as_posix()
-        return item
+        return file_path.relative_to(ref_dir).with_suffix("").as_posix()
 
     def copy(self) -> TocTree:
         """Return a new instance of the TocTree class.
@@ -103,7 +107,8 @@ class Grid:
     #: Additional CSS classes for the grid row element.
     class_row: str | list[str] | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Post initialization of the Grid class."""
         self._pattern = "\n\n.. grid::\n"
         self._no_items = True
         self.options = {}
@@ -125,12 +130,14 @@ class Grid:
             self.add_option("class-row", self.class_row)
 
     def __str__(self) -> str:
+        """Return the grid pattern string."""
         return self.to_string()
 
     def __repr__(self) -> str:
+        """Return the grid pattern string."""
         return f"Grid({self.to_string()})"
 
-    def add_option(self, option: str, value: Any):
+    def add_option(self, option: str, value: object) -> None:
         """Add an option to the grid item card pattern."""
         if option in grid_classes:
             self.add_class_option(option, value)
@@ -139,7 +146,7 @@ class Grid:
         self.options[option] = value
         self.options_format.update({option: param_to_str(value)})
 
-    def add_class_option(self, option: str, value: str):
+    def add_class_option(self, option: str, value: str) -> None:
         """Add class option to the grid pattern."""
         if option not in grid_classes:
             msg = f"{option} is a valid class option for grid."
@@ -153,12 +160,12 @@ class Grid:
         )
         self.options[option] = value
 
-    def add_item(self, item: GridItemCard | str):
+    def add_item(self, item: GridItemCard | str) -> None:
         """Add an item to the grid pattern."""
         self.items.append(item)
 
     @property
-    def pattern(self):
+    def pattern(self) -> str:
         """Return the grid item card pattern string.
 
         This property is a alias for the `to_string` method.
@@ -242,7 +249,8 @@ class GridItemCard:
     #: Additional CSS classes for the footer element.
     class_footer: str | list[str] | None = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Post initialization of the GridItemCard class."""
         self._pattern: str = grid_item_card
         self._no_items: bool = True
         self.options: dict[str, object] = {}
@@ -281,12 +289,14 @@ class GridItemCard:
             self.add_class_option("class-footer", self.class_footer)
 
     def __str__(self) -> str:
+        """Return the grid item card pattern string."""
         return self.to_string()
 
     def __repr__(self) -> str:
+        """Return the grid item card pattern string."""
         return f"GirdItemCard({self.to_string()})"
 
-    def add_option(self, option: str, value: Any):
+    def add_option(self, option: str, value: object) -> None:
         """Add an option to the grid item card pattern."""
         if option in card_classes:
             self.add_class_option(option, value)
@@ -294,7 +304,7 @@ class GridItemCard:
         self.options_format.update({option: param_to_str(value)})
         self.options[option] = value
 
-    def add_class_option(self, option: str, value: str):
+    def add_class_option(self, option: str, value: str) -> None:
         """Add class option to the grid item card pattern."""
         if option not in card_classes:
             msg = f"{option} is not a valid class option for grid item card."
@@ -311,12 +321,12 @@ class GridItemCard:
         )
         self.options[option] = value
 
-    def add_item(self, item: str):
+    def add_item(self, item: str) -> None:
         """Add an item to the grid item card pattern."""
         self.items.append(item)
 
     @property
-    def pattern(self):
+    def pattern(self) -> str:
         """Return the grid item card pattern string.
 
         This property is a alias for the `to_string` method.
@@ -342,7 +352,7 @@ class GridItemCard:
         return pattern
 
     def format(self, target_ref: str, img_path: str) -> str:
-        """Format the grid item card pattern with the target reference and image path."""
+        """Format grid item card pattern with target reference and image path."""
         return self.to_string().format(target_ref=target_ref, img_path=img_path)
 
     def copy(self) -> GridItemCard:
@@ -369,10 +379,11 @@ class GridItemCard:
         return new_card
 
 
-def param_to_str(parameter: Any) -> str:
+def param_to_str(parameter: object) -> str:
     """Format the grid or card parameters."""
     if isinstance(parameter, (tuple, list, set)):
         return " ".join(map(str, parameter))
     if not isinstance(parameter, (str, int, bool)):
-        raise ValueError(f"{parameter} cannot be {type(parameter)}")
+        msg = f"{parameter} cannot be {type(parameter)}"
+        raise TypeError(msg)
     return str(parameter)

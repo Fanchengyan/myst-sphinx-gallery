@@ -3,7 +3,7 @@
     margin: 0 0 20px;
     justify-content: space-between;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(var(--msg-box-min-width), var(--msg-box-max-width)));
     gap: 15px
 }
 
@@ -18,9 +18,11 @@
 }
 
 .msg-sd-card-hover:hover {
+
     transform: scale(1.01);
-    border: 1px solid var(--msg-box-hover-border);
+    border: var(--msg-box-hover-border-width) solid var(--msg-box-hover-border-color);
     border-radius: var(--msg-box-border-radius);
+    --sd-color-shadow: var(--msg-box-hover-shadow-color);
 }
 
 .msg-sd-card-img-top {
@@ -45,13 +47,32 @@
     padding: 0px 10px 5px 10px;
 }
 
-.msg-tooltip::after {
-    visibility: hidden;
+.msg-tooltip[tooltip]::before {
+    -webkit-border-radius: var(--msg-box-border-radius);
+    -moz-border-radius: var(--msg-box-border-radius);
+    border-radius: var(--msg-box-border-radius);
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 97;
+    background-color: var(--msg-tooltip-background);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+}
+
+.msg-tooltip[tooltip]:hover::before {
+    opacity: 1
+}
+
+.msg-tooltip[tooltip]:hover::after {
     -webkit-border-radius: var(--msg-box-border-radius);
     -moz-border-radius: var(--msg-box-border-radius);
     border-radius: var(--msg-box-border-radius);
     color: var(--msg-tooltip-foreground);
-    background-color: var(--msg-tooltip-background);
     content: attr(tooltip);
     padding: 10px 10px 5px;
     z-index: 98;
@@ -64,18 +85,16 @@
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 6;
-}
-
-.msg-tooltip:hover::after {
-    opacity: 1;
-    visibility: visible;
+    -webkit-line-clamp: 6
 }
 
 :root {
     --msg-title-font-size: 1.0rem;
     --msg-box-border-radius: 0.3rem;
-    --sd-color-shadow: var(--msg-box-shadow-color)
+    --sd-color-shadow: var(--msg-box-shadow-color);
+    --msg-box-min-width: 160px;
+    --msg-box-max-width: 1fr;
+
 }
 
 :root,
@@ -86,7 +105,9 @@ body[data-theme=light] {
     --msg-tooltip-border: #ccc transparent;
     --msg-box-background-color: #ffffff7a;
     --msg-box-shadow-color: #6c757d40;
-    --msg-box-hover-border: #0069d9;
+    --msg-box-hover-shadow-color: #06060640;
+    --msg-box-hover-border-color: #0069d9;
+    --msg-box-hover-border-width: 1px;
     --msg-font-color-title: black;
 }
 
@@ -100,7 +121,9 @@ body[data-theme=light] {
         --msg-tooltip-border: #ccc transparent;
         --msg-box-background-color: #ffffff7a;
         --msg-box-shadow-color: #6c757d40;
-        --msg-box-hover-border: #0069d9;
+        --msg-box-hover-shadow-color: #06060640;
+        --msg-box-hover-border-color: #0069d9;
+        --msg-box-hover-border-width: 1px;
         --msg-font-color-title: black;
     }
 }
@@ -113,7 +136,9 @@ body[data-theme=dark] {
     --msg-tooltip-border: #333 transparent;
     --msg-box-background-color: #9494947a;
     --msg-box-shadow-color: #79848d40;
-    --msg-box-hover-border: #003975;
+    --msg-box-hover-shadow-color: #e6e6e640;
+    --msg-box-hover-border-color: #003975;
+    --msg-box-hover-border-width: 2px;
     --msg-font-color-title: white;
 }
 
@@ -126,7 +151,9 @@ body[data-theme=dark] {
         --msg-tooltip-border: #333 transparent;
         --msg-box-background-color: #9494947a;
         --msg-box-shadow-color: #79848d40;
-        --msg-box-hover-border: #003975;
+        --msg-box-hover-shadow-color: #e6e6e640;
+        --msg-box-hover-border-color: #003975;
+        --msg-box-hover-border-width: 2px;
         --msg-font-color-title: white;
 
     }
