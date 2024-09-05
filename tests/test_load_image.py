@@ -12,19 +12,12 @@ from myst_sphinx_gallery.images import (
 
 @pytest.fixture
 def cwd():
-    return Path(__file__).parent
+    return Path(__file__).parent / "data"
 
 
 @pytest.fixture
-def cell_nb_file(cwd):
-    return cwd.parent / "examples1/code_markdown/plot_image_code.ipynb"
-
-
-@pytest.fixture
-def markdown_nb_file():
-    cwd = Path(__file__).parent
-    nb_file = cwd.parent / "examples1/00-alt/nb.ipynb"
-    return nb_file
+def nb_file(cwd):
+    return cwd / "examples/combination/plot_image_markdown.ipynb"
 
 
 @pytest.fixture
@@ -163,13 +156,14 @@ def test_parse_rst_images(rst_content):
     )
 
 
-def test_read_cell_image(cell_nb_file):
-    cell_img = CellImages(cell_nb_file)
+def test_read_cell_image(nb_file):
+    cell_img = CellImages(nb_file)
     assert len(cell_img) == 1
 
 
-def test_read_markdown_image(markdown_nb_file):
-    with open(markdown_nb_file) as f:
+def test_read_markdown_image(nb_file):
+    with open(nb_file) as f:
         md_content = f.read()
     images = parse_md_images(md_content)
     print(images.images)
+    assert len(images) == 6

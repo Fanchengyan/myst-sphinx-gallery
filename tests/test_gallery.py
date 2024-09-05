@@ -9,7 +9,7 @@ from myst_sphinx_gallery.gallery import GalleryConfig, generate_gallery
 @pytest.fixture
 def cwd():
     """Return the conf.py directory."""
-    return Path(__file__).parent.parent / "docs" / "source"
+    return Path(__file__).parent
 
 
 @pytest.fixture
@@ -20,8 +20,8 @@ def gallery_dir_thumbnail():
 @pytest.fixture
 def config(cwd):
     return GalleryConfig(
-        examples_dirs="../../examples1",
-        gallery_dirs="../../tests/_build/auto_examples",
+        examples_dirs="./data/examples",
+        gallery_dirs="./_build/auto_examples",
         root_dir=cwd,
         thumbnail_strategy="first",
         notebook_thumbnail_strategy="markdown",
@@ -31,10 +31,10 @@ def config(cwd):
 @pytest.fixture
 def config2(cwd):
     return GalleryConfig(
-        examples_dirs="../../examples3",
-        gallery_dirs="../../tests/_build/auto_examples3",
+        examples_dirs="./data/examples",
+        gallery_dirs="./_build/auto_examples",
         root_dir=cwd,
-        sub_gallery=True,
+        base_gallery=True,
         thumbnail_strategy="first",
         notebook_thumbnail_strategy="markdown",
     )
@@ -43,8 +43,8 @@ def config2(cwd):
 @pytest.fixture
 def config_thumbnail(gallery_dir_thumbnail, cwd):
     return GalleryConfig(
-        examples_dirs="../../examples1",
-        gallery_dirs=gallery_dir_thumbnail,
+        examples_dirs="./data/examples",
+        gallery_dirs="./_build/auto_examples",
         root_dir=cwd,
         thumbnail_strategy="first",
         notebook_thumbnail_strategy="markdown",
