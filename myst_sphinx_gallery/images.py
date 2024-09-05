@@ -222,6 +222,7 @@ class Thumbnail:
         if out_path.exists():
             msg = f" Thumbnail {out_path} already exists. skipping..."
             logger.info(msg)
+
             return out_path
 
         ensure_dir_exists(out_path.parent)
