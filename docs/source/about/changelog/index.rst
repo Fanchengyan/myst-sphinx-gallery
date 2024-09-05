@@ -7,6 +7,7 @@ This is the list of changes to MyST Sphinx Gallery between each release. For ful
 .. toctree::
     :maxdepth: 2
 
+    v0.3.0
     v0.2.2
     v0.2.1
     v0.2.0
