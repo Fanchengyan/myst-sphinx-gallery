@@ -5,7 +5,6 @@ import pytest
 from sphinx.application import Sphinx
 
 from myst_sphinx_gallery.config import GalleryConfig
-from myst_sphinx_gallery.gallery import generate_gallery
 from myst_sphinx_gallery.sphinx_ext import cleanup_thumbnail, main
 
 
