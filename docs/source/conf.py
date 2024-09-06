@@ -1,63 +1,43 @@
-# -- Gallery Configuration ---------------------------------------------------
-
 import os
 import sys
-from pathlib import Path
 
 from myst_sphinx_gallery import (
-    GalleryConfig,
-    Grid,
-    GridItemCard,
-    ThumbnailConfig,
+    FilesConfig,
+    GalleryThumbnailConfig,
     __version__,
-    generate_gallery,
 )
 
-myst_sphinx_gallery_config = {
-    "examples_dirs": "../../examples1",
-    "gallery_dirs": "auto_examples1",
-    "root_dir": Path(__file__).parent,
-    "notebook_thumbnail_strategy": "code",
-    "thumbnail_strategy": "last",
-}
-
-generate_gallery(
-    GalleryConfig(
-        examples_dirs="../../examples2",
-        gallery_dirs="auto_examples2",
-        root_dir=Path(__file__).parent,
-        notebook_thumbnail_strategy="markdown",
-        thumbnail_strategy="first",
-    )
-)
-
-myst_gallery_grid = Grid(
-    grid_option=(1, 2, 2, 2),
-    margin=3,
-    padding=2,
-)
-myst_gallery_grid.add_option("class-container", "myst-gallery-grid")
-
-myst_gallery_grid_item = GridItemCard(columns=5, margin=3, padding=3)
-myst_gallery_grid_item.add_option("class-item", "myst-gallery-grid-item")
-
-generate_gallery(
-    GalleryConfig(
-        examples_dirs="../../examples3",
-        gallery_dirs="auto_examples3",
-        root_dir=Path(__file__).parent,
-        notebook_thumbnail_strategy="markdown",
-        thumbnail_strategy="last",
-        thumbnail_config=ThumbnailConfig(
-            ref_size=(320, 320),
-            operation="pad",
-            operation_kwargs={"color": "orange"},
-            quality_static=90,
+myst_sphinx_gallery_files_config = FilesConfig(
+    named_config={
+        "first_md": GalleryThumbnailConfig(
+            thumbnail_strategy="first", notebook_thumbnail_strategy="markdown"
         ),
-        target_prefix="myst_gallery_",
-        grid=myst_gallery_grid,
-        grid_item_card=myst_gallery_grid_item,
-    )
+        "first_code": GalleryThumbnailConfig(
+            thumbnail_strategy="first", notebook_thumbnail_strategy="code"
+        ),
+        "last_md": GalleryThumbnailConfig(
+            thumbnail_strategy="last", notebook_thumbnail_strategy="markdown"
+        ),
+        "last_code": GalleryThumbnailConfig(
+            thumbnail_strategy="last", notebook_thumbnail_strategy="code"
+        ),
+    },
+    files_config={
+        "first_code": [
+            "examples/code_markdown/first code.ipynb",
+        ],
+        "last_code": [
+            "examples/code_markdown/last code.ipynb",
+        ],
+        "first_md": [
+            "examples/code_markdown/first markdown.ipynb",
+            "examples/first_last/first.rst",
+        ],
+        "last_md": [
+            "examples/code_markdown/last markdown.ipynb",
+            "examples/first_last/last.rst",
+        ],
+    },
 )
 
 # Configuration file for the Sphinx documentation builder.
@@ -79,11 +59,12 @@ release = f"v{__version__}"
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.doctest",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "sphinx.ext.todo",
     "sphinx_copybutton",
-    "sphinx_design",
     "sphinx_togglebutton",
     "myst_nb",
     "myst_sphinx_gallery",
@@ -113,7 +94,7 @@ html_logo = "_static/logo/logo.svg"
 html_favicon = "_static/logo/logo-square.svg"
 html_theme_options = {
     "show_toc_level": 2,
-    "show_nav_level": 2,
+    "show_nav_level": 1,
     "header_links_before_dropdown": 10,
     "use_edit_page_button": True,
     "pygments_light_style": "default",
@@ -140,7 +121,6 @@ autodoc_default_options = {
     "members": True,
     "undoc-members": True,
     "member-order": "bysource",
-    "special-members": "__init__",
     ":show-inheritance:": True,
 }
 html_context = {

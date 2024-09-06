@@ -2,7 +2,12 @@ from pathlib import Path
 
 import pytest
 
-from myst_sphinx_gallery import GalleryConfig, ThumbnailConfig
+from myst_sphinx_gallery import (
+    FilesConfig,
+    GalleryConfig,
+    GalleryThumbnailConfig,
+    ThumbnailConfig,
+)
 
 
 @pytest.fixture
@@ -84,13 +89,13 @@ class TestGalleryConfig:
 
     def test_gallery_config_multiple_paths(self, cwd):
         config = GalleryConfig(
-            examples_dirs=["examples1", "examples2"],
+            examples_dirs=["examples", "examples2"],
             gallery_dirs=["auto_examples1", "auto_examples2"],
             root_dir=cwd,
             notebook_thumbnail_strategy="code",
             default_thumbnail_file="_static/default_thumbnail.png",
         )
-        assert config.examples_dirs == [cwd / "examples1", cwd / "examples2"]
+        assert config.examples_dirs == [cwd / "examples", cwd / "examples2"]
         assert config.gallery_dirs == [cwd / "auto_examples1", cwd / "auto_examples2"]
         assert config.root_dir == cwd
         assert config.default_thumbnail_file == cwd / "_static/default_thumbnail.png"
@@ -98,7 +103,7 @@ class TestGalleryConfig:
     def test_gallery_config_invalid_paths(self, cwd):
         with pytest.raises(ValueError):
             GalleryConfig(
-                examples_dirs=["examples1"],
+                examples_dirs=["examples"],
                 gallery_dirs=["auto_examples1", "auto_examples2"],
                 root_dir=cwd,
                 notebook_thumbnail_strategy="code",
@@ -131,4 +136,42 @@ class TestGalleryConfig:
         assert (
             config_dict["default_thumbnail_file"]
             == cwd / "_static/default_thumbnail.png"
+        )
+
+
+class TestFileConfig:
+    def test_get(self):
+        config = FilesConfig(
+            named_config={
+                "first_md": GalleryThumbnailConfig(
+                    thumbnail_strategy="first", notebook_thumbnail_strategy="markdown"
+                ),
+                "first_code": GalleryThumbnailConfig(
+                    thumbnail_strategy="first", notebook_thumbnail_strategy="code"
+                ),
+                "last_md": GalleryThumbnailConfig(
+                    thumbnail_strategy="last", notebook_thumbnail_strategy="markdown"
+                ),
+                "last_code": GalleryThumbnailConfig(
+                    thumbnail_strategy="last", notebook_thumbnail_strategy="code"
+                ),
+                "custom_thumbnail_config": GalleryThumbnailConfig(
+                    ThumbnailConfig(
+                        ref_size=(320, 320),
+                        operation_kwargs={"color": "orange"},
+                    )
+                ),
+            },
+            files_config={
+                "last_md": ["examples/code_markdown/markdown.ipynb"],
+                "last_code": ["examples/code_markdown/code.ipynb"],
+            },
+        )
+        assert (
+            config.get("examples/code_markdown/markdown.ipynb")
+            == config.named_config["last_md"]
+        )
+        assert (
+            config.get("examples/code_markdown/code.ipynb")
+            == config.named_config["last_code"]
         )

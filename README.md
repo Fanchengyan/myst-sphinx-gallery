@@ -15,16 +15,30 @@
 
 ## Introduction
 
-**MyST Sphinx Gallery** is a Sphinx extension that allows you to build galleries of examples from Jupyter Notebooks (`.ipynb`), Markdown (`.md`) or reStructuredText (`.rst`) files.  It works with `MyST` Ecosystem, including [MyST-parser](https://myst-parser.readthedocs.io/en/latest/) and [MyST-NB](https://myst-nb.readthedocs.io/en/latest/), to render markdown or jupyter notebooks in Sphinx documentation.
+**MyST Sphinx Gallery** is a Sphinx extension that allows you to build
+galleries from jupyter notebooks (`.ipynb`), markdown (`.md`) or
+reStructuredText (`.rst`) files.
+
+This extension is functionally similar to the
+[Sphinx-Gallery](https://sphinx-gallery.github.io/stable/index.html)
+extension, but aim to provide a simple and efficient way to create
+galleries written in a variety of file formats.
+
 
 ![gallery_example](docs/source/_static/gallery_example.png)
 
 ## Highlight Features
 
-- **Convenient to use** - You can easily generate a gallery of examples from
-your Jupyter Notebooks, Markdown, or reStructuredText files. It works with `MyST` Ecosystem, including [MyST-parser](https://myst-parser.readthedocs.io/en/latest/) and [MyST-NB](https://myst-nb.readthedocs.io/en/latest/), to render markdown or jupyter notebooks in Sphinx documentation.
-- **Fast and robust** - It utilizes existing images to generate gallery thumbnails, eliminating code execution delays and potential accidental errors when building gallery.
-- **Customizable** - You can customize the gallery, such as thumbnail selection, layout, and styling.
+- **Easy to use** - It provides a set of `directives` to generate
+  galleries, as simple as adding `toctree`.
+- **Flexible** - You can easily generate a gallery of examples from your
+  Jupyter Notebooks, Markdown, or reStructuredText files. It works with `MyST` Ecosystem, including [MyST-parser](https://myst-parser.readthedocs.io/en/latest/) and [MyST-NB](https://myst-nb.readthedocs.io/en/latest/), to render markdown or jupyter notebooks in Sphinx documentation.
+- **Fast and robust** - It utilizes existing images to generate gallery
+  thumbnails, eliminating code execution delays and potential accidental errors
+  when building gallery.
+- **Customizable** - You can customize the gallery, such as thumbnail
+  selection, and style of the gallery.
+
 
 ## Documentation
 
@@ -54,31 +68,69 @@ conda install -c conda-forge myst-sphinx-gallery
 mamba install -c conda-forge myst-sphinx-gallery
 ```
 
-## Configure and usages
+## Configuring the extension
 
-To use MyST Sphinx Gallery, you need to add the following code to the Sphinx `conf.py` file:
+### Enable the extension
+
+After installation, you can enable the extension in Sphinx `conf.py` file:
 
 ```python
-from pathlib import Path
-from myst_sphinx_gallery import GalleryConfig, generate_gallery
-
-generate_gallery(
-    GalleryConfig(
-        examples_dirs="../../examples",
-        gallery_dirs="auto_examples",
-        root_dir=Path(__file__).parent,
-        notebook_thumbnail_strategy="code",
-    )
-)
+  extensions = [
+      ...,  # other extensions
+      "myst_sphinx_gallery",
+  ]
 ```
 
->[!NOTE]
-> You can generate **multiple galleries** by proper configuration in the `conf.py` file. For more details, please refer to the [Configure multiple galleries](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/multi_galleries.html#configure-multiple-galleries).
+>[!IMPORTANT]
+>**MyST Sphinx Gallery only helps you to generate the gallery**. You need to enable the MyST parsers to render the markdown or jupyter notebook files by yourself.
+>
+>For instance, to enable the MyST-NB, you can add the following code to the `conf.py` file:
+>
+>```python
+>extensions = [
+>    ...,
+>    "myst_nb",
+>]
+>
+>source_suffix = {
+>    ".rst": "restructuredtext",
+>    ".md": "myst-nb",
+>    ".myst": "myst-nb",
+>}
+>```
+>
+>For more information, please refer to the documentation of [MyST](https://myst-parser.readthedocs.io/en/latest/) and [MyST-NB](  https://myst-nb.readthedocs.io/en/latest/).
 
-## Construct the examples folder
+## Configuring the variables
 
-To generate the gallery, you need to create a well-structured examples folder. The detailed documentation of structuring files for gallery is available at: [Structuring files for Gallery](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/example_structure.html) and [Controlling Examples Order
-](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/order.html).
+
+MyST Sphinx Gallery has two main configuration variables that can be set in
+your `conf.py` file.
+
+- `myst_sphinx_gallery_config` : **global configuration** for all examples
+  using gallery directives or used to **generate galleries**.
+- `myst_sphinx_gallery_files_config` : **configuration for individual files**
+  to override the global configuration for those files.
+
+> [!TIP]
+>Those two variables are optional and can be omitted if you don't need to  customize the behavior of MyST-Sphinx-Gallery.
+
+More details about the configuration variables can be found in the
+[Configuration Variables](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/config.html) section.
+
+## Generating gallery
+
+There are two ways to generate galleries in MyST Sphinx Gallery:
+
+1. **Using directives:** MyST Sphinx Gallery provides three directives for generating galleries: `base-gallery`, `gallery`, and `ref-gallery`. You can directly use these directives to generate galleries in reStructuredText (`.rst`), Markdown (`.md`), and Jupyter Notebook (`.ipynb`) files.
+2. **Configuring in conf.py:** You can also generate gallery by specifying the examples and gallery directories in your `conf.py` file. This method is keeping in line with [Sphinx Gallery](https://sphinx-gallery.github.io/stable/index.html) extension.
+
+
+> [!NOTE]
+>**Using directives** is highly recommended for generating galleries as it provides more options and flexibility. For instance, you can add `tooltip` to example cards, **call different directives multi-times in a single file** to generate a complex gallery. This cannot be done using the configuration method.
+
+You can refer to the [Generating Galleries Methods](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/gen_gallery.html) section for more details.
+
 
 
 ## Select the thumbnail for an example file
@@ -93,11 +145,7 @@ To generate the gallery, you need to create a well-structured examples folder. T
 
 More details can be found in the [Thumbnail Strategies](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/thumb.html).
 
-## Customize the layout and thumbnail
+## Customizing style of thumbnail and card
 
-
-You can customize the layout and thumbnail behaviors for the gallery using the MyST Sphinx Gallery extension. For more details, please refer to the section [Configuration for Generating Galleries
+You can customize the layout and thumbnail behaviors for the gallery using the MyST Sphinx Gallery extension. For more details, please refer to the section [Customizing Style of Thumbnail and Card
 ](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/custom.html).
-
-> [!TIP]
-> The [Examples-3 : Costumizing Grid and Thumbnail](https://myst-sphinx-gallery.readthedocs.io/en/latest/auto_examples3/index.html) is an example gallery used to demonstrate the customization of the layout and thumbnail, providing an intuitive understanding of customizing behaviors.

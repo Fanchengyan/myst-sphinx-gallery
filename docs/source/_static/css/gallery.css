@@ -1,21 +1,26 @@
-
-.myst-gallery-grid-item .sd-card-img-top {
+/* .sd-card-img-top {
     margin: 10px auto;
     background: none !important;
-    width: 80%;
+    width: 90%;
     display: block;
 }
-.myst-gallery-grid-item .sd-card-body {
+
+.sd-row {
+    --sd-gutter-x: 1.5rem;
+    --sd-gutter-y: 1.5rem;
+}
+
+/* .sd-card-body {
     margin: 1px auto;
     display: block;
 }
 
-.myst-gallery-grid-item .sd-card-hover {
+.sd-card-hover {
     border: 1px solid var(--pst-color-warning);
 }
 
-.myst-gallery-grid-item .sd-card-title .reference {
+.sd-card-title .reference {
     color: var(--pst-color-warning);
     font-size: var(--pst-font-size-h5);
     font-weight: lighter;
-}
+} */

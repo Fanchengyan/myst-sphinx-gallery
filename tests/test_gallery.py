@@ -9,17 +9,7 @@ from myst_sphinx_gallery.gallery import GalleryConfig, generate_gallery
 @pytest.fixture
 def cwd():
     """Return the conf.py directory."""
-    return Path(__file__).parent.parent / "docs" / "source"
-
-
-@pytest.fixture
-def examples_dir():
-    return "../../examples1"
-
-
-@pytest.fixture
-def gallery_dir():
-    return "../../tests/_build/auto_examples"
+    return Path(__file__).parent
 
 
 @pytest.fixture
@@ -28,10 +18,10 @@ def gallery_dir_thumbnail():
 
 
 @pytest.fixture
-def config(examples_dir, gallery_dir, cwd):
+def config(cwd):
     return GalleryConfig(
-        examples_dirs=examples_dir,
-        gallery_dirs=gallery_dir,
+        examples_dirs="./data/examples",
+        gallery_dirs="./_build/auto_examples",
         root_dir=cwd,
         thumbnail_strategy="first",
         notebook_thumbnail_strategy="markdown",
@@ -39,10 +29,22 @@ def config(examples_dir, gallery_dir, cwd):
 
 
 @pytest.fixture
-def config_thumbnail(examples_dir, gallery_dir_thumbnail, cwd):
+def config2(cwd):
     return GalleryConfig(
-        examples_dirs=examples_dir,
-        gallery_dirs=gallery_dir_thumbnail,
+        examples_dirs="./data/examples",
+        gallery_dirs="./_build/auto_examples",
+        root_dir=cwd,
+        base_gallery=True,
+        thumbnail_strategy="first",
+        notebook_thumbnail_strategy="markdown",
+    )
+
+
+@pytest.fixture
+def config_thumbnail(gallery_dir_thumbnail, cwd):
+    return GalleryConfig(
+        examples_dirs="./data/examples",
+        gallery_dirs="./_build/auto_examples",
         root_dir=cwd,
         thumbnail_strategy="first",
         notebook_thumbnail_strategy="markdown",
@@ -64,6 +66,12 @@ def test_generate_gallery(config):
     generate_gallery(config)
 
 
+def test_generate_gallery_section(config2):
+    prrint_sep()
+    print("config : ", config2)
+    generate_gallery(config2)
+
+
 def test_generate_gallery_thumbnail(config_thumbnail):
     prrint_sep()
     print("Generate the gallery with the thumbnail configuration")
@@ -74,6 +82,11 @@ def test_generate_gallery_thumbnail(config_thumbnail):
 
     prrint_sep()
     thumb_dir = config_thumbnail.gallery_dirs[0] / "myst_sphinx_gallery_thumbs"
+    print(
+        f">>> Processing thumbnail images are in {thumb_dir}\n"
+        ">>> You can check whether the thumbnail images are generated with the black background in the padding area."
+    )
+    prrint_sep()
     print(
         f">>> Processing thumbnail images are in {thumb_dir}\n"
         ">>> You can check whether the thumbnail images are generated with the black background in the padding area."

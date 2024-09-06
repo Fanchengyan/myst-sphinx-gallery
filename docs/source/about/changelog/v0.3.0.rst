@@ -1,0 +1,47 @@
+==================================
+What’s new in 0.3.0 (Sep 05, 2024)
+==================================
+
+
+Adding gallery directives
+=========================
+
+Now, you can generate galleries directly using directives in documentation.
+There are three gallery directives available:
+
+- **base-gallery:** Create a base gallery.
+- **gallery:** Create a total gallery in which base galleries serve as sections.
+- **ref-gallery:** Create a gallery which items are all references to external
+  files.
+
+.. hint::
+   - ``base-gallery`` and ``gallery`` directives will create ``toctree`` nodes
+     automatically. They can be called multi-times in the same document.
+     You can combine them to create more complex galleries.
+   - ``ref-gallery`` directive can be used in your Python docs to display the related
+     examples directly. Here is an example: :ref:`ref-gallery-directive-in-code-docs`.
+
+Configuration variables
+=======================
+
+- Adding a new configuration variable ``myst_sphinx_gallery_files_config`` to
+  specify the configuration for each file in the gallery.
+- ``myst_sphinx_gallery_config`` now can left examples and galleries
+  dictionaries be None, which will serve as a pure global configuration.
+
+Deprecation
+===========
+
+In this release, we have changed the style of the gallery cards from
+the ``Sphinx-Design`` to ``Sphinx Gallery``.
+
+Therefore, ``toc_tree``, ``grid``, and ``grid_item_card`` now not suggested
+to be used by user in the gallery configuration. It will only be internally
+used by program.
+
+Besides, the style parameters, like ``margin``, ``padding``, and ``gutter``
+parameters in the :class:`~myst_sphinx_gallery.grid.Grid` and
+:class:`~myst_sphinx_gallery.grid.GridItemCard` are deprecated. This can avoid
+wired layout in the gallery cards with new style. Instead, we suggest to use
+CSS to adjust the layout of gallery cards. More details can be found in the
+:ref:`custom` section.

@@ -4,12 +4,18 @@
 API Reference
 =============
 
-This section contains the API reference documentation for the MyST Sphinx Gallery extension.
+This section contains the API reference documentation for the MyST Sphinx
+Gallery extension.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
 
-   gallery
-   images
-   config
+
+.. autosummary::
+   :toctree: generated/
+   :recursive:
+
+   myst_sphinx_gallery.config
+   myst_sphinx_gallery.directives
+   myst_sphinx_gallery.gallery
+   myst_sphinx_gallery.images
+   myst_sphinx_gallery.utils
+   myst_sphinx_gallery.grid

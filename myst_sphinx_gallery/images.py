@@ -1,6 +1,4 @@
-"""
-A module to manage images in a MyST markdown/notebook/rst file.
-"""
+"""A module to manage images in a MyST markdown/notebook/rst file."""
 
 from __future__ import annotations
 
@@ -12,6 +10,7 @@ from typing import Literal
 
 import nbformat
 from PIL import Image, ImageOps
+from sphinx.util import logging
 
 from .utils import ensure_dir_exists, print_run_time
 
@@ -27,9 +26,11 @@ SaveKwargs = {
     "compression": 6,
 }
 
+logger = logging.getLogger(__name__)
+
 
 class Thumbnail:
-    """A class to manage the thumbnail image"""
+    """A class to manage the thumbnail image."""
 
     _path: Path
     _image: Image.Image
@@ -40,7 +41,7 @@ class Thumbnail:
         output_dir: Path | str,
         ref_size: tuple[int, int] | int = (320, 224),
         operation: Literal["thumbnail", "contain", "cover", "fit", "pad"] = "pad",
-        max_animation_frames=50,
+        max_animation_frames: int = 50,
         quality_static: int = 80,
         quality_animated: int = 15,
         operation_kwargs: dict[str, int] | None = None,
@@ -83,7 +84,8 @@ class Thumbnail:
             self._path = Path(image)
             self._image = Image.open(image)
         else:
-            raise ValueError("image must be a path or PIL Image object")
+            msg = "image must be a path or PIL Image object"
+            raise TypeError(msg)
 
         self.operation = operation
         self.operation_kwargs = operation_kwargs
@@ -96,15 +98,18 @@ class Thumbnail:
         self._save_kwargs = self._format_save_kwargs(save_kwargs)
 
     def __str__(self) -> str:
+        """Return the string representation of the object."""
         return f"Thumbnail(path={self.path})"
 
     def __repr__(self) -> str:
+        """Return the string representation of the object."""
         return f"Thumbnail(path={self.path})"
 
     def _format_save_kwargs(self, save_kwargs: dict) -> dict:
         """Format the save keyword arguments."""
         if not isinstance(save_kwargs, dict):
-            raise ValueError("save_kwargs must be a dictionary")
+            msg = "save_kwargs must be a dictionary"
+            raise TypeError(msg)
         kwargs = SaveKwargs.copy()
         if self.image.n_frames > 1:
             kwargs.update(
@@ -117,12 +122,12 @@ class Thumbnail:
         else:
             kwargs.update({"quality": self.quality_static})
         if self.operation == "pad":
-            kwargs.update({"color": "00000000"})  # transparent background
+            kwargs.update({"color": "white"})
 
         kwargs.update(save_kwargs)
         return kwargs
 
-    def _parse_frames(self):
+    def _parse_frames(self) -> tuple[list[int], int]:
         """Parse the frames and duration of the output animated image."""
         n_frames = self.image.n_frames
         max_frames = self.max_animation_frames
@@ -140,19 +145,15 @@ class Thumbnail:
         """Format the size of the thumbnail image to a tuple of length 2."""
         if isinstance(size, int):
             return size, size
-        elif isinstance(size, tuple):
-            if len(size) != 2:
-                raise ValueError("size must be a tuple of length 2")
-            return size
-        else:
-            try:
-                size = tuple(size)
-                if len(size) != 2:
-                    raise ValueError("size must be a tuple of length 2")
-                return size
-            except Exception as e:
-                if e is TypeError:
-                    raise ValueError("size must be a tuple of length 2") from e
+
+        msg = "size must be a tuple of length 2"
+        try:
+            size = tuple(size)
+        except Exception as e:
+            raise ValueError(msg) from e
+        if len(size) != 2:
+            raise ValueError(msg)
+        return size
 
     @property
     def path(self) -> Path:
@@ -214,14 +215,19 @@ class Thumbnail:
         -------
         out_path : Path
             The path to the saved thumbnail image.
+
         """
         out_path = self.auto_output_path if out_path is None else Path(out_path)
+
         if out_path.exists():
-            print(f"Thumbnail {out_path} already exists... skipping.")
+            msg = f" Thumbnail {out_path} already exists. skipping..."
+            logger.info(msg)
+
             return out_path
 
         ensure_dir_exists(out_path.parent)
-        print(f"Saving thumbnail to {out_path}")
+        msg = f" Saving thumbnail to {out_path}"
+        logger.info(msg)
 
         if self.image.n_frames > 1:
             frames_idx, duration = self._parse_frames()
@@ -264,30 +270,33 @@ class DocImages:
         return len(self.images)
 
     def __str__(self) -> str:
+        """Return the string representation of the object."""
         return f"DocImages(images={len(self.images)})"
 
     def __repr__(self) -> str:
+        """Return the string representation of the object."""
         return f"DocImages(images={len(self.images)})"
 
     def __add__(self, other: DocImages) -> DocImages:
+        """Concatenate two DocImages objects."""
         if isinstance(other, DocImages):
             return DocImages(self.images + other.images)
-        else:
-            raise TypeError(
-                f"unsupported operand type(s) for +: 'DocImages' and '{type(other)}'"
-            )
+        msg = f"unsupported operand type(s) for +: 'DocImages' and '{type(other)}'"
+        raise TypeError(msg)
 
     def __hash__(self) -> int:
+        """Return the hash value of the object."""
         return hash(tuple(self.images))
 
     def __eq__(self, other: DocImages) -> bool:
+        """Check if two DocImages objects are equal."""
         return self.images == other.images
 
     def __getitem__(self, idx: int) -> tuple[str]:
         """Return the image url at the specified index."""
         return self.images[idx][0]
 
-    def _parse_images(self):
+    def _parse_images(self) -> tuple[list[str], list[str]]:
         """Parse the images urls and alt text."""
         if len(self.images) == 0:
             return [], []
@@ -318,8 +327,7 @@ class DocImages:
         idx = self.where(alt)
         if len(idx) == 0:
             return []
-        else:
-            return [self.urls[i] for i in idx]
+        return [self.urls[i] for i in idx]
 
 
 class CellImages:
@@ -333,9 +341,9 @@ class CellImages:
         self._notebook_file = Path(notebook_file)
         self._images = self._extract_images()
 
-    def _extract_images(self):
+    def _extract_images(self) -> list[Image.Image]:
         """Extract images from code cell outputs in a notebook."""
-        with open(self.notebook_file, encoding="utf-8") as f:
+        with self.notebook_file.open(encoding="utf-8") as f:
             notebook = nbformat.read(f, as_version=4)
 
         images = []
@@ -355,10 +363,16 @@ class CellImages:
         return len(self.images)
 
     def __str__(self) -> str:
+        """Return the string representation of the object."""
         return f"CellImages(images={len(self.images)})"
 
     def __repr__(self) -> str:
+        """Return the string representation of the object."""
         return f"CellImages(images={len(self.images)})"
+
+    def __getitem__(self, idx: int) -> Image.Image:
+        """Return the image at the specified index."""
+        return self.images[idx]
 
     @property
     def images(self) -> list[Image.Image]:
@@ -370,7 +384,7 @@ class CellImages:
         """The path to the notebook file."""
         return self._notebook_file
 
-    def save_images(self, output_dir: Path):
+    def save_images(self, output_dir: Path) -> None:
         """Save the images to the output directory."""
         output_dir = Path(output_dir)
         if not output_dir.exists():
@@ -378,15 +392,16 @@ class CellImages:
         for i, img in enumerate(self.images):
             img.save(output_dir / f"{self.notebook_file.stem}_{i}.png")
 
-    def save_image(self, output_file: Path, index: int):
+    def save_image(self, output_file: Path, index: int) -> None:
         """Save an image to the output directory.
 
         Parameters
         ----------
-        output_dir : Path
-            The output directory.
+        output_file : Path
+            The output file.
         index : int
             The index of the image to save.
+
         """
         output_file = Path(output_file)
         ensure_dir_exists(output_file.parent)
@@ -400,7 +415,9 @@ def parse_md_images(markdown_content: str) -> DocImages:
     Two types of markdown image syntax are supported:
 
     1. Conventional markdown image syntax: ``![alt](img/xxx.png)``
-    2. Myst markdown image/figure syntax: See `Images and figures <https://myst-parser.readthedocs.io/en/latest/syntax/images_and_figures.html>`_ for more details.
+    2. Myst markdown image/figure syntax: See `Images and figures
+       <https://myst-parser.readthedocs.io/en/latest/syntax/images_and_figures.html>`_
+       for more details.
 
     .. warning::
 
@@ -415,6 +432,7 @@ def parse_md_images(markdown_content: str) -> DocImages:
     -------
     images : DocImages
         A DocImages instance, which contains the image url and alt text.
+
     """
     images = []
 
@@ -436,20 +454,6 @@ def parse_md_images(markdown_content: str) -> DocImages:
         images.append((strip_str(url), strip_str(alt)))
 
     return DocImages(images)
-
-
-def load_nb_markdown(nb_file: Path) -> str:
-    """Load the markdown content from a Jupyter notebook file."""
-
-    with open(nb_file, encoding="utf-8") as f:
-        notebook = nbformat.read(f, as_version=4)
-
-    markdown_cells = []
-    for cell in notebook.cells:
-        if cell.cell_type == "markdown":
-            markdown_cells.append(cell.source)
-
-    return "\n".join(markdown_cells)
 
 
 def parse_rst_images(rst_content: str) -> DocImages:
@@ -474,8 +478,8 @@ def parse_rst_images(rst_content: str) -> DocImages:
     -------
     images : DocImages
         A DocImages instance, which contains the image url and alt text.
-    """
 
+    """
     pattern = r"\.\.\s+(image|figure)::\s+(.*?)\n(?:\s+:.*?:\s*(.*?)\n)*"
 
     images = []

@@ -28,14 +28,28 @@ MyST Sphinx Gallery
 Introduction
 ------------
 
-**MyST Sphinx Gallery** is a Sphinx extension that allows you to build galleries of examples from jupyter notebooks (``.ipynb``), markdown (``.md``) or reStructuredText (``.rst``) files. It works with ``MyST`` ecosystem, including `MyST-parser <https://myst-parser.readthedocs.io/en/latest/>`_ and `MyST-NB <https://myst-nb.readthedocs.io/en/latest/>`_, to render markdown or jupyter notebooks in Sphinx documentation.
+**MyST Sphinx Gallery** is a Sphinx extension that allows you to build
+galleries from jupyter notebooks (``.ipynb``), markdown (``.md``) or
+reStructuredText (``.rst``) files.
+
+This extension is functionally similar to the
+`Sphinx-Gallery <https://sphinx-gallery.github.io/stable/index.html>`_
+extension, but aim to provide a simple and efficient way to create
+galleries written in a variety of formats.
 
 Highlight Features
 ------------------
 
-- **Convenient to use** - You can easily generate a gallery of examples from your Jupyter Notebooks, Markdown, or reStructuredText files. It works with ``MyST`` ecosystem, including `MyST-parser <https://myst-parser.readthedocs.io/en/latest/>`_ and `MyST-NB <https://myst-nb.readthedocs.io/en/latest/>`_, to render markdown or jupyter notebooks in Sphinx documentation.
-- **Fast and robust** - It utilizes existing images to generate gallery thumbnails, eliminating code execution delays and potential accidental errors when building gallery.
-- **Customizable** - You can customize the gallery, such as thumbnail selection, layout, and styling.
+- **Easy to use** - It provides a set of directives to generate
+  galleries, as simple as adding ``toctree``.
+- **Flexible** - You can easily generate a gallery of examples from your
+  Jupyter Notebooks, Markdown, or reStructuredText files. It works with
+  ``MyST`` ecosystem, including `MyST-parser <https://myst-parser.readthedocs.io/en/latest/>`_ and `MyST-NB <https://myst-nb.readthedocs.io/en/latest/>`_, to render markdown or jupyter notebooks in Sphinx documentation.
+- **Fast and robust** - It utilizes existing images to generate gallery
+  thumbnails, eliminating code execution delays and potential accidental errors
+  when building gallery.
+- **Customizable** - You can customize the gallery, such as thumbnail
+  selection, and style of the gallery.
 
 .. toctree::
    :maxdepth: 2
@@ -43,10 +57,10 @@ Highlight Features
    :hidden:
 
    user_guide/index
-   examples
+   examples/index
    api/index
    contributing/index
-   changelog/index
+   About <about/index>
 
 
 
@@ -64,7 +78,7 @@ Navigation
       :class-card: intro-card
       :shadow: md
 
-      Learn how to use **MyST Sphinx Gallery** to generate a gallery for a well-structured examples folder.
+      Learn how to install and use **MyST Sphinx Gallery** to generate galleries, and customize it.
 
       +++
 
@@ -81,11 +95,11 @@ Navigation
       :class-card: intro-card
       :shadow: md
 
-      Explore the auto-generated examples from the examples folder.
+      Explore the Demo Gallery, showcasing gallery directives, thumbnail selection strategies, and options effects.
 
       +++
 
-      .. button-ref:: gallery_header
+      .. button-ref:: demo_gallery
          :ref-type: ref
          :click-parent:
          :color: warning

@@ -2,9 +2,9 @@
 name: tests
 
 on:
-   pull_request:
-   # to trigger workflow manually from actions-tab
-   workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main, dev]
 
 jobs:
   build:
