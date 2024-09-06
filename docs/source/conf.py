@@ -3,7 +3,6 @@ import sys
 
 from myst_sphinx_gallery import (
     FilesConfig,
-    GalleryConfig,
     GalleryThumbnailConfig,
     __version__,
 )

@@ -6,4 +6,4 @@ sphinx-design
 pydata_sphinx_theme
 sphinx-togglebutton
 Jinja2
-git+https://github.com/Fanchengyan/myst-sphinx-gallery@main
+git+https://github.com/Fanchengyan/myst-sphinx-gallery@dev
