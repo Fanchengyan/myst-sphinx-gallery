@@ -13,7 +13,6 @@ from sphinx import addnodes
 from sphinx.directives.other import TocTree
 from sphinx.util import logging
 from sphinx.util.docutils import SphinxDirective
-from sphinx.util.nodes import nested_parse_with_titles
 from sphinx_design.cards import CardDirective
 from sphinx_design.shared import PassthroughTextElement
 
@@ -126,10 +125,16 @@ class GalleryABC(SphinxDirective):
         """Parse the gallery config for give file."""
         path_relative = Path(file_path).relative_to(self.env.app.srcdir).as_posix()
         config = self.env.config
-        if hasattr(config, "myst_sphinx_gallery_files_config"):
+        if (
+            hasattr(config, "myst_sphinx_gallery_files_config")
+            and config.myst_sphinx_gallery_files_config
+        ):
             files_config = config.myst_sphinx_gallery_files_config
             gallery_config = ensure_config(files_config.get(path_relative))
-        elif hasattr(config, "myst_sphinx_gallery_config"):
+        elif (
+            hasattr(config, "myst_sphinx_gallery_config")
+            and config.myst_sphinx_gallery_config
+        ):
             gallery_config = ensure_config(config.myst_sphinx_gallery_config)
         else:
             gallery_config = GalleryConfig()
@@ -176,7 +181,7 @@ class RefGalleryDirective(GalleryABC):
             except Exception as exc:
                 msg = f"Error in directive '{self.name}' in document '{docname}': {exc}"
                 logger.exception(msg)
-                raise RuntimeError(msg) from exc
+                self.error(msg)
         grid_node += row_node
 
         return [grid_node]
@@ -225,7 +230,7 @@ class BaseGallery(GalleryABC):
             except Exception as exc:
                 msg = f"Error in directive '{self.name}' in document '{docname}': {exc}"
                 logger.exception(msg)
-                raise RuntimeError(msg) from exc
+                self.error(msg)
         grid_node += row_node
         return [grid_node, *self.create_toctree()]
 
@@ -298,7 +303,7 @@ class GalleryDirective(GalleryABC):
             except Exception as exc:
                 msg = f"Error in directive '{self.name}' in document '{docname}': {exc}"
                 logger.exception(msg)
-                raise RuntimeError(msg) from exc
+                self.error(msg)
 
         return section_nodes + self.create_toctree()
 
