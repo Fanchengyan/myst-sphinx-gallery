@@ -129,7 +129,7 @@ There are two ways to generate galleries in MyST Sphinx Gallery:
 > [!NOTE]
 >**Using directives** is highly recommended for generating galleries as it provides more options and flexibility. For instance, you can add `tooltip` to example cards, **call different directives multi-times in a single file** to generate a complex gallery. This cannot be done using the configuration method.
 
-You can refer to the [Generating Galleries Methods](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/gen_gallery.html) section for more details.
+You can refer to the [Generating Galleries Methods](https://myst-sphinx-gallery.readthedocs.io/en/latest/user_guide/gen_gallery/index.html) section for more details.
 
 
 
